@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>α1.00</title>
+</head>
+<body>
+
+<script>
+
+window.document.bgColor='Gray';
+
+<!--【変数設定】-->
+<!--【misc】-->
+<!--【db】-->
+<!--【map】-->
+<!--【計算】-->
+<!--【初期設定】-->
+<!--【エリア選択】-->
+<!--【表示】-->
+<!--【メニュー】-->
+<!--【数値メニュー】-->
+<!--【陸軍増設】-->
+<!--【陸軍占領】-->
+<!--【経済開発】-->
+<!--【インフラ】-->
+<!--【関係改善】-->
+<!--【不可侵条約】-->
+<!--【従属要求】-->
+<!--【開戦工作】-->
+<!--【宣戦布告】-->
+<!--【治安作戦】-->
+<!--【教育投資】-->
+<!--【決定】-->
+<!--【ターン更新】-->
+<!--【AI】-->
+<!--【AI脅威計算】-->
+<!--【AI勢力圏計算】-->
+<!--【AI警戒度】-->
+<!--【制海権計算】-->
+<!--【宣戦布告】-->
+<!--【戦闘】-->
+<!--【AI関係改善】-->
+<!--【技術研究】-->
+<!--【ランダムイベント】-->
+
+<!--【変数設定】-->
+
+var AIKannsoku = 0;
+
+var Debaggu = 0;
+
+var Game = 0;
+
+var TurnNum = 1;
+
+<!--【misc】-->
+
+//プレイヤー
+var MiscPoliticsPowerBitiku = 30;
+var MiscPlayerTecResEff = 10;//約10ターンで今日教育投資の効果が研究に現れる
+
+//経済
+var MiscArmZousetu = 10;
+var MiscArmIjihi = 0.5;
+var MiscAreaKeizaikaihatu = 12;//約25ターンで元が取れる
+var MiscInf = 10;
+
+//治安
+var MiscNannminn = 25;
+var MiscNannminnTousei = 50;
+var MiscBattleChi = 20;
+
+//外交
+var MiscFukaTurn = 20;
+
+//戦争
+var MiscWarExhKaihukuAtwar = 3;
+var MiscWarExhAtt = 50;
+var MiscWarExhDef = 50;
+var MiscWarExhKaihuku = 1;
+var MiscDecEhx = 2;
+var MiscPaceNumBattel = 2;
+
+//戦闘
+var MiscDecArm = 1.5;
+var MiscBattel = 0.2;
+var MiscBattelDefBon = 1.1;
+var MiscDefKessennRate = 1.4;
+
+//AI
+var MiscAIWarKyoui = 1;
+var MiscFukasinnKyoJogai = 4;
+var MiscAIInfLim = 60;//AIは60％までインフラを建設する
+
+//初期設定
+var MiscSyokiPop = 10;
+
+<!--【db】-->
+
+var PaceNum = 100;
+var KeikiNum = 100;
+
+<!--宗教-->
+
+var ReligionSousu = 7;
+
+ReligionData = new Array();
+//0名称、1マップカラー
+
+ReligionData[ 0] = new Array("未指定","NOT");
+ReligionData[ 1] = new Array("キリスト教","Blue");
+ReligionData[ 2] = new Array("イスラム教","Green");
+ReligionData[ 3] = new Array("ユダヤ教","Gunnjou");
+ReligionData[ 4] = new Array("ヒンズー教","Yellow");
+ReligionData[ 5] = new Array("仏教","Red");
+ReligionData[ 6] = new Array("中華思想","Orange");//未使用
+ReligionData[ 7] = new Array("神道","White");
+
+ReligionNam = new Array();
+ReligionMap = new Array();
+for (HenA=0;HenA<=ReligionSousu;HenA++) {
+	ReligionNam[HenA] = ReligionData[HenA][0];
+	ReligionMap[HenA] = ReligionData[HenA][1];
+}
+
+<!--民族-->
+
+var MinnzokuSousu = 36;
+
+MinnzokuData = new Array();
+//0名称、1宗教
+
+MinnzokuData[  0] = new Array("未指定",0);
+MinnzokuData[  1] = new Array("イギリス",1);
+MinnzokuData[  2] = new Array("フランス",1);
+MinnzokuData[  3] = new Array("スペイン",1);
+MinnzokuData[  4] = new Array("ドイツ",1);
+MinnzokuData[  5] = new Array("イタリア",1);
+MinnzokuData[  6] = new Array("オーストリア",1);//未使用
+MinnzokuData[  7] = new Array("スウェーデン",1);
+MinnzokuData[  8] = new Array("ポーランド",1);
+MinnzokuData[  9] = new Array("ウクライナ",1);
+MinnzokuData[ 10] = new Array("ハンガリー",1);
+MinnzokuData[ 11] = new Array("ルーマニア",1);
+MinnzokuData[ 12] = new Array("トルコ",2);
+MinnzokuData[ 13] = new Array("ベラルーシ",1);//未使用
+MinnzokuData[ 14] = new Array("ラトビア",1);
+MinnzokuData[ 15] = new Array("フィンランド",1);
+MinnzokuData[ 16] = new Array("ロシア",1);
+MinnzokuData[ 17] = new Array("アゼルバイジャン",2);
+MinnzokuData[ 18] = new Array("アラブ",2);
+MinnzokuData[ 19] = new Array("ユダヤ",3);
+MinnzokuData[ 20] = new Array("イラン",2);
+MinnzokuData[ 21] = new Array("アフガニスタン",2);
+MinnzokuData[ 22] = new Array("パキスタン",2);
+MinnzokuData[ 23] = new Array("インド",4);
+MinnzokuData[ 24] = new Array("ミャンマー",5);
+MinnzokuData[ 25] = new Array("タイ",5);
+MinnzokuData[ 26] = new Array("ベトナム",5);
+MinnzokuData[ 27] = new Array("シンガポール",5);
+MinnzokuData[ 28] = new Array("中国",5);
+MinnzokuData[ 29] = new Array("モンゴル",5);
+MinnzokuData[ 30] = new Array("東トルキスタン",2);
+MinnzokuData[ 31] = new Array("チベット",5);
+MinnzokuData[ 32] = new Array("朝鮮",5);
+MinnzokuData[ 33] = new Array("カザフスタン",2);
+MinnzokuData[ 34] = new Array("ウズベキスタン",2);
+MinnzokuData[ 35] = new Array("トルキスタン",2);
+MinnzokuData[ 36] = new Array("日本",7);
+
+MinnzokuNam = new Array();
+MinnzokuRel = new Array();
+for (HenA=0;HenA<=MinnzokuSousu;HenA++) {
+	MinnzokuNam[HenA] = MinnzokuData[HenA][0];
+	MinnzokuRel[HenA] = MinnzokuData[HenA][1];
+}
+
+<!--イデオロギー-->
+
+IdeologyData = new Array();
+//0名称、1開戦工作の平和度しきい値、2宣戦布告の関係性しきい値(死にデータ)、3政治力収入、4従属要求の平和度しきい値、5マップカラー
+
+IdeologyData[  0] = new Array("自由民主制",100,-25,3,100,"Umi");
+IdeologyData[  1] = new Array("独裁制",100,-10,3,100,"Gray");
+IdeologyData[  2] = new Array("権威民主制",80,-10,3,100,"Blue");
+
+IdeologyNam = new Array();
+IdeologyKou = new Array();
+IdeologyKai = new Array();
+IdeologyPoi = new Array();
+IdeologyJuz = new Array();
+IdeologyMap = new Array();
+for (HenA=0;HenA<=2;HenA++) {
+	IdeologyNam[HenA] = IdeologyData[HenA][0];
+	IdeologyKou[HenA] = IdeologyData[HenA][1];
+	IdeologyKai[HenA] = IdeologyData[HenA][2];
+	IdeologyPoi[HenA] = IdeologyData[HenA][3];
+	IdeologyJuz[HenA] = IdeologyData[HenA][4];
+	IdeologyMap[HenA] = IdeologyData[HenA][5];
+}
+
+<!--国家-->
+
+var KokkaSousu = 39;
+
+NationData = new Array();
+//0名称、1民族、2旗、3イデオロギー、4首都、5従属、6未使用(旧拡張AI)、7腐敗率、8教育投資、(9難民統制(おそらくミス))、9同盟、10海軍拠点
+
+NationData[  0] = new Array("未指定",0,"NOT",0,0,-1,0,0,0,-1,0);
+NationData[  1] = new Array("イギリス王国",1,"ENG",0,1,-1,0,0,0.3,-1,1);
+NationData[  2] = new Array("フランス共和国",2,"FRA",0,2,-1,0,0,0.3,-1,2);
+NationData[  3] = new Array("スペイン",3,"SPA",0,3,-1,0,0,0.3,-1,3);
+NationData[  4] = new Array("ドイツ連邦共和国",4,"GER",0,4,-1,0,0,0.4,-1,4);
+NationData[  5] = new Array("イタリア",5,"ITA",0,5,-1,0,5,0.3,-1,5);
+NationData[  6] = new Array("オーストリア",4,"AUS",0,6,-1,0,0,0.3,-1,-1);
+NationData[  7] = new Array("スウェーデン",7,"SWE",0,7,-1,0,0,0.5,-1,7);
+NationData[  8] = new Array("ポーランド",8,"POL",0,8,-1,0,0,0.3,-1,8);
+NationData[  9] = new Array("ウクライナ",9,"UKR",0,9,-1,0,0,0.2,-1,9);
+NationData[ 10] = new Array("ハンガリー",10,"HUN",0,10,-1,0,0,0.3,-1,-1);
+NationData[ 11] = new Array("ルーマニア",11,"ROM",0,11,-1,0,0,0.2,-1,11);
+NationData[ 12] = new Array("トルコ",12,"TUR",1,12,-1,0,0,0.1,-1,12);
+NationData[ 13] = new Array("ベラルーシ",16,"BLR",1,13,16,0,10,0.2,-1,-1);
+NationData[ 14] = new Array("ラトビア",14,"LAT",0,14,-1,0,0,0.3,-1,14);
+NationData[ 15] = new Array("フィンランド",15,"FIN",0,15,-1,0,0,0.3,-1,15);
+NationData[ 16] = new Array("ロシア連邦共和国",16,"RUS",1,17,-1,1,10,0.3,-1,16);
+NationData[ 17] = new Array("アゼルバイジャン",17,"AZE",1,18,-1,0,10,0.4,-1,-1);
+NationData[ 18] = new Array("モロッコ",18,"MOR",1,21,-1,0,10,0.1,-1,18);
+NationData[ 19] = new Array("アルジェリア",18,"ALG",1,22,-1,0,100,0.1,-1,22);
+NationData[ 20] = new Array("リビア",18,"LBY",1,23,-1,0,10,0.3,-1,23);
+NationData[ 21] = new Array("エジプト",18,"EGY",1,24,-1,0,10,0.1,-1,24);
+NationData[ 22] = new Array("イスラエル",19,"ISR",2,25,-1,0,0,1.0,-1,25);
+NationData[ 23] = new Array("イラク",18,"IRQ",1,26,-1,0,20,0.1,-1,26);
+NationData[ 24] = new Array("サウジアラビア",18,"SAU",1,27,-1,0,20,0.2,-1,27);
+NationData[ 25] = new Array("イラン",20,"PER",1,28,-1,0,20,0.1,-1,28);
+NationData[ 26] = new Array("アフガニスタン(米軍統治)",21,"AFG",1,29,-1,0,40,0.1,-1,-1);
+NationData[ 27] = new Array("パキスタン",22,"PAK",1,31,-1,0,20,0.04,-1,31);
+NationData[ 28] = new Array("インド",23,"IND",0,33,-1,0,20,0.04,-1,35);
+NationData[ 29] = new Array("ミャンマー",24,"BUR",1,36,-1,0,40,0.1,-1,36);
+NationData[ 30] = new Array("タイ",25,"SIA",1,37,-1,0,0,0.1,-1,37);
+NationData[ 31] = new Array("ベトナム",26,"VIE",1,38,-1,0,10,0.1,-1,38);
+NationData[ 32] = new Array("シンガポール",27,"U75",1,39,-1,0,10,0.4,-1,39);
+NationData[ 33] = new Array("中華人民共和国",28,"CHC",1,42,-1,0,10,0.1,-1,40);
+NationData[ 34] = new Array("モンゴル",29,"MON",0,46,-1,0,10,0.2,-1,-1);
+NationData[ 35] = new Array("韓国",30,"KOR",0,51,-1,0,0,0.3,-1,51);
+NationData[ 36] = new Array("カザフスタン",33,"KAZ",1,60,-1,0,10,0.2,-1,-1);
+NationData[ 37] = new Array("ウズベキスタン",34,"UZB",1,61,-1,0,10,0.1,-1,-1);
+NationData[ 38] = new Array("トルキスタン",35,"TRK",1,62,-1,0,10,0.3,-1,-1);
+NationData[ 39] = new Array("【観戦用】",36,"JAP",0,63,-1,0,0,0.0,-1,63);
+
+NationNam = new Array();
+NationMin = new Array();
+NationHat = new Array();
+NationIdo = new Array();
+NationCap = new Array();
+NationInd = new Array();
+NationZzz = new Array();
+NationHuh = new Array();
+NationRes = new Array();
+NationUni = new Array();
+NationSca = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationNam[HenA] = NationData[HenA][0];
+	NationMin[HenA] = NationData[HenA][1];
+	NationHat[HenA] = NationData[HenA][2];
+	NationIdo[HenA] = NationData[HenA][3];
+	NationCap[HenA] = NationData[HenA][4];
+	NationInd[HenA] = NationData[HenA][5];
+	NationZzz[HenA] = NationData[HenA][6];
+	NationHuh[HenA] = NationData[HenA][7];
+	NationRes[HenA] = NationData[HenA][8];
+	NationUni[HenA] = NationData[HenA][9];
+	NationSca[HenA] = NationData[HenA][10];
+}
+
+NationArm = new Array();//軍事力
+NationMon = new Array();//備蓄資金
+NationEco = new Array();//総収入
+NationKyo = new Array();//脅威度(小国が隣接する軍事大国に怯える値)
+NationExh = new Array();//戦争疲労度
+NationPoi = new Array();//政治力収入
+NationPop = new Array();//備蓄政治力
+NationPon = new Array();//人口
+NationNal = new Array();//難民統制
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationArm[HenA] = 0;
+	NationMon[HenA] = 0;
+	NationEco[HenA] = 0;
+	NationKyo[HenA] = 0;
+	NationExh[HenA] = 0;
+	NationPoi[HenA] = IdeologyPoi[NationIdo[HenA]];
+	if (NationInd[HenA]!=-1) { NationPoi[HenA]--; }
+	NationPop[HenA] = 0;
+	NationPon[HenA] = 0;
+	NationNal[HenA] = MiscNannminnTousei;
+	if (NationIdo[HenA]==0) { NationNal[HenA] = MiscNannminn; }
+}
+
+NationPoi[2]=1.5;
+
+NationKan = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationKan[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		NationKan[HenA][HenB] = 0;
+	}
+}
+
+//ロシアvsウクライナ
+NationKan[ 9][16]=-25;
+NationKan[16][ 9]=-25;
+
+//アラブ人vsイスラエル
+NationKan[18][22]=-25;
+NationKan[19][22]=-25;
+NationKan[20][22]=-50;
+NationKan[21][22]=-50;
+NationKan[23][22]=-50;
+NationKan[24][22]=-50;
+NationKan[22][18]=-25;
+NationKan[22][19]=-25;
+NationKan[22][20]=-50;
+NationKan[22][21]=-50;
+NationKan[22][23]=-50;
+NationKan[22][24]=-50;
+
+//サウジアラビアvsイラン
+NationKan[24][25]=-50;
+NationKan[25][24]=-50;
+
+//インドvsパキスタン
+NationKan[27][28]=-50;
+NationKan[28][27]=-50;
+
+NationFukashinn = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationFukashinn[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		NationFukashinn[HenA][HenB] = 0;
+	}
+}
+
+//アフガニスタン隣接国(削除)
+//NationFukashinn[25][26] = 1;
+//NationFukashinn[26][25] = 1;
+//NationFukashinn[26][27] = 1;
+//NationFukashinn[27][26] = 1;
+//NationFukashinn[26][38] = 1;
+//NationFukashinn[38][26] = 1;
+
+NationWar = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationWar[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		NationWar[HenA][HenB] = new Array();
+		for (HenC=0;HenC<=1;HenC++) {//0戦争の経過ターン数(0で戦争なし)、1戦勝点
+			NationWar[HenA][HenB][HenC] = 0;
+		}
+	}
+}
+
+<!--国家技術-->
+
+NationTecData = new Array();
+//0民間経済
+
+NationTecData[  0] = new Array(1,0);//未指定
+NationTecData[  1] = new Array(1,0);//イギリス王国
+NationTecData[  2] = new Array(1,0);//フランス共和国
+NationTecData[  3] = new Array(1,0);//スペイン
+NationTecData[  4] = new Array(1.2,0);//ドイツ連邦共和国
+NationTecData[  5] = new Array(1,0);//イタリア
+NationTecData[  6] = new Array(1,0);//オーストリア
+NationTecData[  7] = new Array(1.2,0);//スウェーデン
+NationTecData[  8] = new Array(0.8,0);//ポーランド
+NationTecData[  9] = new Array(0.6,0);//ウクライナ
+NationTecData[ 10] = new Array(0.8,0);//ハンガリー
+NationTecData[ 11] = new Array(0.6,0);//ルーマニア
+NationTecData[ 12] = new Array(0.6,0);//トルコ
+NationTecData[ 13] = new Array(0.6,0);//ベラルーシ
+NationTecData[ 14] = new Array(1.2,0);//ラトビア
+NationTecData[ 15] = new Array(1.2,0);//フィンランド
+NationTecData[ 16] = new Array(0.6,0);//ロシア連邦共和国
+NationTecData[ 17] = new Array(0.4,0);//アゼルバイジャン
+NationTecData[ 18] = new Array(0.6,0);//モロッコ
+NationTecData[ 19] = new Array(0.6,0);//アルジェリア
+NationTecData[ 20] = new Array(0.6,0);//リビア
+NationTecData[ 21] = new Array(0.6,0);//エジプト
+NationTecData[ 22] = new Array(1,0);//イスラエル
+NationTecData[ 23] = new Array(0.6,0);//イラク
+NationTecData[ 24] = new Array(0.6,0);//サウジアラビア
+NationTecData[ 25] = new Array(0.6,0);//イラン
+NationTecData[ 26] = new Array(0.6,0);//アフガニスタン(米軍統治)
+NationTecData[ 27] = new Array(0.6,0);//パキスタン
+NationTecData[ 28] = new Array(0.6,0);//インド
+NationTecData[ 29] = new Array(0.6,0);//ミャンマー
+NationTecData[ 30] = new Array(0.6,0);//タイ
+NationTecData[ 31] = new Array(0.6,0);//ベトナム
+NationTecData[ 32] = new Array(1,0);//シンガポール
+NationTecData[ 33] = new Array(0.6,0);//中華人民共和国
+NationTecData[ 34] = new Array(0.6,0);//モンゴル
+NationTecData[ 35] = new Array(1,0);//韓国
+NationTecData[ 36] = new Array(0.6,0);//カザフスタン
+NationTecData[ 37] = new Array(0.6,0);//ウズベキスタン
+NationTecData[ 38] = new Array(0.6,0);//トルキスタン
+NationTecData[ 39] = new Array(0.8,0);//日本
+
+NationTecEcoGrothCost = new Array();
+NationTecEconomyEff = new Array();
+NationTecArmyAttEff = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationTecEcoGrothCost[HenA] = NationTecData[HenA][0];
+	NationTecEconomyEff[HenA] = 1.00;
+	NationTecArmyAttEff[HenA] = 1.00;
+}
+
+<!--地形-->
+
+ThikeiData = new Array();
+//0名称、1マップカラー、2勢力圏計算用、3防御側攻撃係数、4攻撃側防御係数、5占領係数
+
+ThikeiData[  0] = new Array("平地","Brown",1,1,1,1);
+ThikeiData[  1] = new Array("山岳","Gray",0.7,0.5,0.4,0.5);
+
+
+ThikeiNam = new Array();
+ThikeiMap = new Array();
+ThikeiSei = new Array();
+ThikeiDef = new Array();
+ThikeiAtt = new Array();
+ThikeiSen = new Array();
+for (HenA=0;HenA<=1;HenA++) {
+	ThikeiNam[HenA] = ThikeiData[HenA][0];
+	ThikeiMap[HenA] = ThikeiData[HenA][1];
+	ThikeiSei[HenA] = ThikeiData[HenA][2];
+	ThikeiDef[HenA] = ThikeiData[HenA][3];
+	ThikeiAtt[HenA] = ThikeiData[HenA][4];
+	ThikeiSen[HenA] = ThikeiData[HenA][5];
+}
+
+<!--陸地エリア-->
+
+var AreaSousu = 63;
+
+AreaData = new Array();
+//0名称、1支配国、2生産力、3治安、4宗教、5民族、6人口、7資源、8インフラ、9地形
+
+AreaData[  0] = new Array("未指定",0,0,100,0,0,0,0,0,0);
+AreaData[  1] = new Array("ロンドン",1,6,100,1,1,6,10,100,0);
+AreaData[  2] = new Array("パリ",2,5,100,1,2,5,0,100,0);
+AreaData[  3] = new Array("マドリッド",3,4,100,1,3,4,0,100,0);
+AreaData[  4] = new Array("ベルリン",4,7,100,1,4,7,0,100,0);
+AreaData[  5] = new Array("ローマ",5,4,100,1,5,4,0,100,0);
+AreaData[  6] = new Array("ウィーン",6,2,100,1,4,2,0,100,1);
+AreaData[  7] = new Array("ストックホルム",7,3,100,1,7,1,3,100,1);
+AreaData[  8] = new Array("ワルシャワ",8,3,100,1,8,4,0,80,0);
+AreaData[  9] = new Array("キエフ",9,2,100,1,9,4,5,80,0);
+AreaData[ 10] = new Array("ブダペスト",10,3,100,1,10,3,0,80,1);
+AreaData[ 11] = new Array("ブカレスト",11,1,100,1,11,3,10,40,1);
+AreaData[ 12] = new Array("アンカラ",12,3,100,2,12,8,0,50,1);
+AreaData[ 13] = new Array("ミンスク",13,1,100,1,13,1,0,80,0);
+AreaData[ 14] = new Array("リガ",14,2,100,1,14,1,0,100,0);
+AreaData[ 15] = new Array("ヘルシンキ",15,2,100,1,15,1,0,100,1);
+AreaData[ 16] = new Array("ペテルブルク",16,1,100,1,16,2,0,80,0);
+AreaData[ 17] = new Array("モスクワ",16,2,100,1,16,3,0,80,0);
+AreaData[ 18] = new Array("バグー",17,1,100,2,17,2,10,40,1);
+AreaData[ 19] = new Array("コーカサス",16,1,100,1,16,1,0,80,1);
+AreaData[ 20] = new Array("ヴォルコグラード",16,2,100,1,16,3,0,80,0);
+AreaData[ 21] = new Array("ラバト",18,2,90,2,17,4,0,40,0);
+AreaData[ 22] = new Array("アルジェ",19,2,85,2,18,4,10,40,0);
+AreaData[ 23] = new Array("トリポリ",20,1,30,2,18,1,30,40,0);
+AreaData[ 24] = new Array("カイロ",21,3,70,2,18,10,10,40,0);
+AreaData[ 25] = new Array("エルサレム",22,4,80,3,19,1,0,100,0);
+AreaData[ 26] = new Array("バグダッド",23,1,70,2,18,4,40,20,0);
+AreaData[ 27] = new Array("リヤド",24,2,90,2,18,3,50,40,0);
+AreaData[ 28] = new Array("テヘラン",25,4,90,2,20,8,40,40,1);
+AreaData[ 29] = new Array("カブール",26,1,10,2,21,4,0,10,1);
+AreaData[ 30] = new Array("イスラマバード",27,3,90,2,22,11,0,20,0);
+AreaData[ 31] = new Array("カラチ",27,3,90,2,22,11,0,20,0);
+AreaData[ 32] = new Array("ムンバイ",28,5,90,4,23,20,0,30,0);//インド人は半分でカウント
+AreaData[ 33] = new Array("デリー",28,5,90,4,23,20,0,30,0);
+AreaData[ 34] = new Array("コルカタ",28,5,90,4,23,20,0,30,0);
+AreaData[ 35] = new Array("チェンナイ",28,5,90,4,23,20,0,30,0);
+AreaData[ 36] = new Array("ヤンゴン",29,2,80,5,24,5,10,20,1);
+AreaData[ 37] = new Array("バンコク",30,3,100,5,25,7,0,50,0);
+AreaData[ 38] = new Array("ハノイ",31,2,90,5,26,9,0,60,1);
+AreaData[ 39] = new Array("シンガポール",32,3,100,5,27,1,0,100,0);
+AreaData[ 40] = new Array("広州",33,3,100,5,28,10,0,60,0);//中国人は半分でカウント
+AreaData[ 41] = new Array("上海",33,3,100,5,28,10,0,60,0);
+AreaData[ 42] = new Array("北京",33,4,100,5,28,10,0,70,0);
+AreaData[ 43] = new Array("重慶",33,2,100,5,28,10,0,60,1);
+AreaData[ 44] = new Array("蘭州",33,2,100,5,28,10,0,60,1);
+AreaData[ 45] = new Array("瀋陽",33,3,100,5,28,10,10,60,0);
+AreaData[ 46] = new Array("ウランバトール",34,1,100,5,29,1,0,40,0);
+AreaData[ 47] = new Array("敦煌",33,1,100,5,28,5,0,50,1);
+AreaData[ 48] = new Array("ウルムチ",33,1,70,2,30,1,5,40,1);
+AreaData[ 49] = new Array("昆明",33,2,100,5,28,10,0,50,1);
+AreaData[ 50] = new Array("チベット",33,1,80,5,31,1,0,40,1);
+AreaData[ 51] = new Array("ソウル",35,5,100,5,30,5,0,100,0);
+AreaData[ 52] = new Array("イルクーツク",16,0.1,100,1,16,0.1,0,60,0);
+AreaData[ 53] = new Array("ウラジオストック",16,0.5,100,1,16,0.5,0,80,0);
+AreaData[ 54] = new Array("チタ",16,0.1,100,1,16,0.1,0,60,0);
+AreaData[ 55] = new Array("ノボシビルスク",16,0.1,100,1,16,0.1,10,60,0);
+AreaData[ 56] = new Array("オムスク",16,0.1,100,1,16,0.1,10,60,0);
+AreaData[ 57] = new Array("チェリャビンスク",16,0.1,100,1,16,0.1,10,60,0);
+AreaData[ 58] = new Array("カザニ",16,0.5,100,1,16,0.5,0,60,0);
+AreaData[ 59] = new Array("アルハンゲリスク",16,0.1,100,1,16,0.1,0,60,0);
+AreaData[ 60] = new Array("アスタナ",36,2,90,2,30,3,5,40,0);
+AreaData[ 61] = new Array("タシュケント",37,1,80,2,28,3,5,40,0);
+AreaData[ 62] = new Array("アシガバード",38,1,100,2,31,1,10,80,0);
+AreaData[ 63] = new Array("東京",39,7,100,7,36,12,0,100,1);
+
+AreaNam = new Array();
+AreaShi = new Array();
+AreaEco = new Array();
+AreaChi = new Array();
+AreaRel = new Array();
+AreaMin = new Array();
+AreaPop = new Array();
+AreaOil = new Array();
+AreaInf = new Array();
+AreaThi = new Array();
+AreaSen = new Array();//占領国
+AreaSer = new Array();//占領率
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	AreaNam[HenA] = AreaData[HenA][0];
+	AreaShi[HenA] = AreaData[HenA][1];
+	AreaEco[HenA] = AreaData[HenA][2];
+	AreaChi[HenA] = AreaData[HenA][3];
+	AreaRel[HenA] = AreaData[HenA][4];
+	AreaMin[HenA] = AreaData[HenA][5];
+	AreaPop[HenA] = AreaData[HenA][6];
+	AreaOil[HenA] = AreaData[HenA][7];
+	AreaInf[HenA] = AreaData[HenA][8];
+	AreaThi[HenA] = AreaData[HenA][9];
+	AreaSen[HenA] = AreaData[HenA][1];
+	AreaSer[HenA] = 0;
+}
+
+
+<!--海域エリア-->
+
+var SeaAreaSousu = 1013;
+
+SeaAreaData = new Array();
+//0名称
+
+SeaAreaData[1000] = new Array("未指定",0);
+SeaAreaData[1001] = new Array("北海",0);
+SeaAreaData[1002] = new Array("大西洋東部",0);
+SeaAreaData[1003] = new Array("地中海",0);
+SeaAreaData[1004] = new Array("黒海",0);
+SeaAreaData[1005] = new Array("紅海",0);
+SeaAreaData[1006] = new Array("インド洋西部",0);
+SeaAreaData[1007] = new Array("インド洋東部",0);
+SeaAreaData[1008] = new Array("南シナ海",0);
+SeaAreaData[1009] = new Array("東シナ海",0);
+SeaAreaData[1010] = new Array("日本海",0);
+SeaAreaData[1011] = new Array("バレンツ海",0);
+SeaAreaData[1012] = new Array("バルト海",0);
+SeaAreaData[1013] = new Array("ペルシャ湾",0);
+
+SeaAreaNam = new Array();
+for (HenA=1000;HenA<=SeaAreaSousu;HenA++) {
+	SeaAreaNam[HenA] = SeaAreaData[HenA][0];
+	AreaNam[HenA] = SeaAreaData[HenA][0];
+}
+
+<!--【map】-->
+
+<!--陸地と陸地-->
+
+AreaSetuzokuData = new Array();
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	AreaSetuzokuData[HenA] = new Array();
+	for (HenB=0;HenB<=AreaSousu;HenB++) {
+		AreaSetuzokuData[HenA][HenB] = 0;
+	}
+}
+AreaSetuzokuData[  1][  2] = 1;
+AreaSetuzokuData[  2][  3] = 1;AreaSetuzokuData[  2][  4] = 1;AreaSetuzokuData[  2][  5] = 1;
+AreaSetuzokuData[  3][ 21] = 1;
+AreaSetuzokuData[  4][  6] = 1;AreaSetuzokuData[  4][  7] = 1;AreaSetuzokuData[  4][  8] = 1;
+AreaSetuzokuData[  5][  6] = 1;
+AreaSetuzokuData[  6][ 10] = 1;
+AreaSetuzokuData[  7][ 15] = 1;
+AreaSetuzokuData[  8][ 10] = 1;AreaSetuzokuData[  8][ 13] = 1;AreaSetuzokuData[  8][ 14] = 1;
+AreaSetuzokuData[  9][ 10] = 1;AreaSetuzokuData[  9][ 13] = 1;AreaSetuzokuData[  9][ 20] = 1;
+AreaSetuzokuData[ 10][ 11] = 1;
+AreaSetuzokuData[ 11][ 12] = 1;
+AreaSetuzokuData[ 12][ 18] = 1;AreaSetuzokuData[ 12][ 25] = 1;
+AreaSetuzokuData[ 13][ 14] = 1;AreaSetuzokuData[ 13][ 16] = 1;AreaSetuzokuData[ 13][ 17] = 1;
+AreaSetuzokuData[ 14][ 16] = 1;AreaSetuzokuData[ 14][ 17] = 1;
+AreaSetuzokuData[ 15][ 16] = 1;
+AreaSetuzokuData[ 16][ 17] = 1;AreaSetuzokuData[ 16][ 59] = 1;
+AreaSetuzokuData[ 17][ 20] = 1;AreaSetuzokuData[ 17][ 58] = 1;
+AreaSetuzokuData[ 18][ 19] = 1;AreaSetuzokuData[ 18][ 26] = 1;
+AreaSetuzokuData[ 19][ 20] = 1;
+AreaSetuzokuData[ 20][ 58] = 1;
+AreaSetuzokuData[ 21][ 22] = 1;
+AreaSetuzokuData[ 22][ 23] = 1;
+AreaSetuzokuData[ 23][ 24] = 1;
+AreaSetuzokuData[ 24][ 25] = 1;
+AreaSetuzokuData[ 25][ 26] = 1;
+AreaSetuzokuData[ 26][ 27] = 1;AreaSetuzokuData[ 26][ 28] = 1;
+AreaSetuzokuData[ 28][ 29] = 1;AreaSetuzokuData[ 28][ 31] = 1;
+AreaSetuzokuData[ 29][ 30] = 1;AreaSetuzokuData[ 29][ 62] = 1;
+AreaSetuzokuData[ 30][ 31] = 1;AreaSetuzokuData[ 30][ 33] = 1;
+AreaSetuzokuData[ 31][ 32] = 1;
+AreaSetuzokuData[ 32][ 33] = 1;AreaSetuzokuData[ 32][ 35] = 1;
+AreaSetuzokuData[ 33][ 34] = 1;AreaSetuzokuData[ 33][ 50] = 1;
+AreaSetuzokuData[ 34][ 35] = 1;AreaSetuzokuData[ 34][ 36] = 1;
+AreaSetuzokuData[ 36][ 37] = 1;AreaSetuzokuData[ 36][ 49] = 1;
+AreaSetuzokuData[ 37][ 38] = 1;AreaSetuzokuData[ 37][ 39] = 1;
+AreaSetuzokuData[ 38][ 40] = 1;AreaSetuzokuData[ 38][ 49] = 1;
+AreaSetuzokuData[ 40][ 41] = 1;AreaSetuzokuData[ 40][ 43] = 1;AreaSetuzokuData[ 40][ 49] = 1;
+AreaSetuzokuData[ 41][ 42] = 1;AreaSetuzokuData[ 41][ 43] = 1;
+AreaSetuzokuData[ 42][ 44] = 1;AreaSetuzokuData[ 42][ 45] = 1;AreaSetuzokuData[ 42][ 46] = 1;
+AreaSetuzokuData[ 43][ 44] = 1;AreaSetuzokuData[ 43][ 49] = 1;AreaSetuzokuData[ 43][ 50] = 1;
+AreaSetuzokuData[ 44][ 47] = 1;
+AreaSetuzokuData[ 45][ 46] = 1;AreaSetuzokuData[ 45][ 51] = 1;AreaSetuzokuData[ 45][ 53] = 1;
+AreaSetuzokuData[ 46][ 54] = 1;
+AreaSetuzokuData[ 47][ 48] = 1;
+AreaSetuzokuData[ 48][ 60] = 1;AreaSetuzokuData[ 48][ 61] = 1;
+AreaSetuzokuData[ 51][ 53] = 1;
+AreaSetuzokuData[ 52][ 55] = 1;AreaSetuzokuData[ 52][ 54] = 1;
+AreaSetuzokuData[ 53][ 54] = 1;
+AreaSetuzokuData[ 55][ 56] = 1;
+AreaSetuzokuData[ 56][ 57] = 1;AreaSetuzokuData[ 56][ 60] = 1;
+AreaSetuzokuData[ 57][ 58] = 1;AreaSetuzokuData[ 57][ 60] = 1;
+AreaSetuzokuData[ 60][ 61] = 1;
+AreaSetuzokuData[ 61][ 62] = 1;
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	for (HenB=0;HenB<=AreaSousu;HenB++) {
+		if (AreaSetuzokuData[HenA][HenB]==1) {
+			AreaSetuzokuData[HenB][HenA] = 1;
+		}
+	}
+}
+
+<!--海域と海域-->
+
+for (HenA=1000;HenA<=SeaAreaSousu;HenA++) {
+	AreaSetuzokuData[HenA] = new Array();
+	for (HenB=1000;HenB<=SeaAreaSousu;HenB++) {
+		AreaSetuzokuData[HenA][HenB] = 0;
+	}
+}
+
+AreaSetuzokuData[1001][1002] = 1;AreaSetuzokuData[1001][1011] = 1;AreaSetuzokuData[1001][1012] = 4;
+AreaSetuzokuData[1002][1003] = 3;
+AreaSetuzokuData[1003][1004] = 12;AreaSetuzokuData[1003][1005] = 24;
+AreaSetuzokuData[1005][1006] = 1;
+AreaSetuzokuData[1006][1007] = 1;AreaSetuzokuData[1006][1013] = 1;
+AreaSetuzokuData[1007][1008] = 39;
+AreaSetuzokuData[1008][1009] = 1;
+AreaSetuzokuData[1009][1010] = 1;
+for (HenA=1000;HenA<=SeaAreaSousu;HenA++) {
+	for (HenB=1000;HenB<=SeaAreaSousu;HenB++) {
+		if (AreaSetuzokuData[HenA][HenB]>=1) {
+			AreaSetuzokuData[HenB][HenA] = AreaSetuzokuData[HenA][HenB];
+		}
+	}
+}
+
+KaikyouNam = new Array();
+KaikyouNam[3] = "ジブラルタル海峡";
+KaikyouNam[4] = "ベルト海峡";
+KaikyouNam[12] = "ボスポラス海峡";
+KaikyouNam[24] = "スエズ運河";
+KaikyouNam[39] = "マラッカ海峡";
+
+<!--陸地と海域-->
+
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	for (HenB=1000;HenB<=SeaAreaSousu;HenB++) {
+		AreaSetuzokuData[HenA][HenB] = 0;
+	}
+}
+
+for (HenA=1000;HenA<=SeaAreaSousu;HenA++) {
+	for (HenB=0;HenB<=AreaSousu;HenB++) {
+		AreaSetuzokuData[HenA][HenB] = 0;
+	}
+}
+
+AreaSetuzokuData[1001][  1] = 1;AreaSetuzokuData[1001][  2] = 1;AreaSetuzokuData[1001][  4] = 1;AreaSetuzokuData[1001][  7] = 1;
+AreaSetuzokuData[1002][  1] = 1;AreaSetuzokuData[1002][  2] = 1;AreaSetuzokuData[1002][  3] = 1;AreaSetuzokuData[1002][ 21] = 1;
+AreaSetuzokuData[1003][  2] = 1;AreaSetuzokuData[1003][  3] = 1;AreaSetuzokuData[1003][  5] = 1;AreaSetuzokuData[1003][ 12] = 1;AreaSetuzokuData[1003][ 22] = 1;AreaSetuzokuData[1003][ 23] = 1;AreaSetuzokuData[1003][ 24] = 1;AreaSetuzokuData[1003][ 25] = 1;
+AreaSetuzokuData[1004][  9] = 1;AreaSetuzokuData[1004][ 11] = 1;AreaSetuzokuData[1004][ 12] = 1;AreaSetuzokuData[1004][ 19] = 1;
+AreaSetuzokuData[1006][ 31] = 1;AreaSetuzokuData[1006][ 32] = 1;
+AreaSetuzokuData[1007][ 34] = 1;AreaSetuzokuData[1007][ 35] = 1;AreaSetuzokuData[1007][ 36] = 1;AreaSetuzokuData[1007][ 39] = 1;
+AreaSetuzokuData[1008][ 37] = 1;AreaSetuzokuData[1008][ 38] = 1;AreaSetuzokuData[1008][ 39] = 1;AreaSetuzokuData[1008][ 40] = 1;
+AreaSetuzokuData[1009][ 40] = 1;AreaSetuzokuData[1009][ 41] = 1;AreaSetuzokuData[1009][ 42] = 1;AreaSetuzokuData[1009][ 45] = 1;AreaSetuzokuData[1009][ 51] = 1;AreaSetuzokuData[1009][ 63] = 1;
+AreaSetuzokuData[1010][ 51] = 1;AreaSetuzokuData[1010][ 53] = 1;AreaSetuzokuData[1010][ 63] = 1;
+AreaSetuzokuData[1011][ 59] = 1;
+AreaSetuzokuData[1012][  7] = 1;AreaSetuzokuData[1012][  8] = 1;AreaSetuzokuData[1012][ 14] = 1;AreaSetuzokuData[1012][ 15] = 1;AreaSetuzokuData[1012][ 16] = 1;
+AreaSetuzokuData[1013][ 26] = 1;AreaSetuzokuData[1013][ 28] = 1;
+for (HenA=1000;HenA<=SeaAreaSousu;HenA++) {
+	for (HenB=1;HenB<=AreaSousu;HenB++) {
+		if (AreaSetuzokuData[HenA][HenB]==1) {
+			AreaSetuzokuData[HenB][HenA] = 1;
+		}
+	}
+}
+
+<!--【計算】-->
+
+<!--原油価格-->
+
+function GennyuKakaku() {
+	GennyuSoujuyou = 0;
+	GennyuKyoukyuu = 0;
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		GennyuSoujuyou += AreaEco[HenA]*AreaChi[HenA]/100;
+		GennyuKyoukyuu += AreaOil[HenA]*AreaChi[HenA]/100;
+	}
+	GennyuNum = GennyuSoujuyou/GennyuKyoukyuu*0.2;
+	GennyuNum = Math.round(GennyuNum*100)/100;
+}
+
+GennyuKakaku()
+
+<!--歳入-->
+
+function Keisann() {
+	for (KeisannHenA=0;KeisannHenA<=KokkaSousu;KeisannHenA++) {
+		NationEco[KeisannHenA]=0;
+		NationPon[KeisannHenA]=0;
+	}
+	for (KeisannHenA=0;KeisannHenA<=AreaSousu;KeisannHenA++) {
+		if (NationInd[AreaShi[KeisannHenA]]==-1) {
+			NationEco[AreaShi[KeisannHenA]] += AreaEco[KeisannHenA]*AreaChi[KeisannHenA]/100*KeikiNum/100*(1-GennyuNum)*(100-NationHuh[AreaShi[KeisannHenA]])/100;
+			NationEco[AreaShi[KeisannHenA]] += AreaOil[KeisannHenA]*AreaChi[KeisannHenA]/100*GennyuNum*(100-NationHuh[AreaShi[KeisannHenA]])/100;
+		}
+		if (NationInd[AreaShi[KeisannHenA]]!=-1) {
+			NationEco[AreaShi[KeisannHenA]] += AreaEco[KeisannHenA]/2*AreaChi[KeisannHenA]/100*KeikiNum/100*(1-GennyuNum)*(100-NationHuh[AreaShi[KeisannHenA]])/100;
+			NationEco[AreaShi[KeisannHenA]] += AreaOil[KeisannHenA]/2*AreaChi[KeisannHenA]/100*GennyuNum*(100-NationHuh[AreaShi[KeisannHenA]])/100;
+			NationEco[NationInd[AreaShi[KeisannHenA]]] += AreaEco[KeisannHenA]/2*AreaChi[KeisannHenA]/100*KeikiNum/100*(1-GennyuNum)*(100-NationHuh[AreaShi[KeisannHenA]])/100;
+			NationEco[NationInd[AreaShi[KeisannHenA]]] += AreaOil[KeisannHenA]/2*AreaChi[KeisannHenA]/100*GennyuNum*(100-NationHuh[AreaShi[KeisannHenA]])/100;
+			NationEco[NationInd[AreaShi[KeisannHenA]]] = Math.round(NationEco[NationInd[AreaShi[KeisannHenA]]]*10)/10;
+		}
+		NationEco[AreaShi[KeisannHenA]] =  Math.round(NationEco[AreaShi[KeisannHenA]]*NationTecEconomyEff[AreaShi[KeisannHenA]]*10)/10;
+		NationPon[AreaShi[KeisannHenA]] += AreaPop[KeisannHenA];
+		NationPon[AreaShi[KeisannHenA]] = Math.round(NationPon[AreaShi[KeisannHenA]]);
+	}
+}
+
+<!--【初期設定】-->
+
+Keisann()
+
+<!--初期軍備-->
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationArm[HenA] = Math.floor(NationEco[HenA]/2);
+	if (NationArm[HenA]==0) { NationArm[HenA]=0.5; }
+	if (NationArm[HenA]<0) { NationArm[HenA]=0.1; }
+}
+
+<!--自由→独裁(-15)-->
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		if (NationIdo[HenA]==0 && NationIdo[HenB]==1) {
+			NationKan[HenA][HenB]-=15;
+		}
+	}
+}
+
+<!--自由→自由(+15)-->
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		if (NationIdo[HenA]==0 && NationIdo[HenB]==0) {
+			if (HenA!=HenB) {
+				NationKan[HenA][HenB]+=15;
+			}
+		}
+	}
+}
+
+<!--同民族(+25)-->
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		if (NationMin[HenA]==NationMin[HenB]) {
+			if (HenA!=HenB) {
+				NationKan[HenA][HenB]+=25;
+			}
+		}
+	}
+}
+
+<!--同宗教(+10)-->
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		if (MinnzokuRel[NationMin[HenA]]==MinnzokuRel[NationMin[HenB]]) {
+			if (HenA!=HenB) {
+				NationKan[HenA][HenB]+=10;
+			}
+		}
+	}
+}
+
+<!--【エリア選択】-->
+
+SenntakuArea = 1;
+function Area(Num) {
+	SenntakuArea = Num;
+	HyoujiKoshinn()
+}
+
+function SeaArea(Num) {
+	SenntakuArea = Num;
+	HyoujiKoshinn()
+}
+
+<!--【表示】-->
+
+<!--国家・地域表示-->
+
+function HyoujiKoshinn() {
+	document.For00.Tex00.defaultValue = TurnNum;
+	document.For00.Tex01.defaultValue = KeikiNum+"％";
+	document.For00.Tex02.defaultValue = PaceNum;
+	if (Game==0) { document.getElementById("選択国家").src=NationHat[AreaShi[SenntakuArea]]+".png"; }
+	if (Game!=0) {
+		HenA = Math.round((NationEco[PlayNation]-NationArm[PlayNation]*MiscArmIjihi-NationPon[PlayNation]*NationRes[PlayNation])*10)/10;
+		if (HenA>=0) { document.For01.Tex00.defaultValue = NationMon[PlayNation]+"+"+HenA; }
+		if (HenA<0)  { document.For01.Tex00.defaultValue = NationMon[PlayNation]+""+HenA; }
+	}
+	if (Game!=0) { document.For01.Tex01.defaultValue = NationPop[PlayNation]+"+"+NationPoi[PlayNation]; }
+	if (SenntakuArea<1000) {
+		document.For03.Tex00.defaultValue = NationNam[AreaShi[SenntakuArea]];
+		document.For03.Tex01.defaultValue = NationArm[AreaShi[SenntakuArea]];
+		document.For03.Tex02.defaultValue = NationEco[AreaShi[SenntakuArea]];
+		document.For03.Tex03.defaultValue = NationPon[AreaShi[SenntakuArea]];
+		if (Game!=0) { document.For03.Tex04.defaultValue = NationKan[PlayNation][AreaShi[SenntakuArea]]; }
+		document.For03.Tex10.defaultValue = AreaNam[SenntakuArea];
+		document.For03.Tex11.defaultValue = AreaEco[SenntakuArea];
+		document.For03.Tex12.defaultValue = AreaPop[SenntakuArea];
+		document.For03.Tex13.defaultValue = AreaOil[SenntakuArea];
+		document.For03.Tex14.defaultValue = AreaChi[SenntakuArea];
+		document.For07.S00.selectedIndex  = TecPro[AreaShi[SenntakuArea]][0];
+		document.For07.Tex00.defaultValue = TecPro[AreaShi[SenntakuArea]][1]+"/"+TecCos[TecPro[AreaShi[SenntakuArea]][0]];
+		document.For08.Tex00.defaultValue = NationTecEcoGrothCost[AreaShi[SenntakuArea]];
+		document.For08.Tex01.defaultValue = NationTecEconomyEff[AreaShi[SenntakuArea]];
+		document.For08.Tex02.defaultValue = NationTecArmyAttEff[AreaShi[SenntakuArea]];
+	}
+	if (SenntakuArea>=1000) {
+		document.For03.Tex00.defaultValue = "公海";
+		document.For03.Tex01.defaultValue = "0";
+		document.For03.Tex02.defaultValue = "0";
+		document.For03.Tex03.defaultValue = "0";
+		document.For03.Tex04.defaultValue = "0";
+		document.For03.Tex10.defaultValue = AreaNam[SenntakuArea];
+		document.For03.Tex11.defaultValue = "0";
+		document.For03.Tex12.defaultValue = "0";
+		document.For03.Tex13.defaultValue = "0";
+		document.For03.Tex14.defaultValue = "0";
+		document.For07.Tex00.defaultValue = "0/1";
+		document.For08.Tex00.defaultValue = "0";
+		document.For08.Tex01.defaultValue = "0";
+		document.For08.Tex02.defaultValue = "0";
+	}
+	switch (MenuNum) {
+		case -1:
+		break;
+		case 0:
+			HenA = "";
+			HenC = 0;
+			for(HenB=0;HenB<=AreaSousu;HenB++) {
+				if (AreaSetuzokuData[SenntakuArea][HenB]==1) {
+					if (HenC>=1) { HenA+="、"; }
+					HenA+=AreaNam[HenB];
+					HenC++;
+				}
+			}
+			for(HenB=1000;HenB<=SeaAreaSousu;HenB++) {
+				if (AreaSetuzokuData[SenntakuArea][HenB]>=1) {
+					if (HenC>=1) { HenA+="、"; }
+					if (AreaSetuzokuData[SenntakuArea][HenB]==1) { HenA+=AreaNam[HenB]; }
+					if (AreaSetuzokuData[SenntakuArea][HenB]>1) { HenA+=AreaNam[HenB]+"("+KaikyouNam[AreaSetuzokuData[SenntakuArea][HenB]]+")"; }
+					HenC++;
+				}
+			}
+			HenF = AreaSer[SenntakuArea];
+			document.For05.Memo00.defaultValue = AreaNam[SenntakuArea]+"は"+HenA+"と接続しています(占領率"+HenF+"％)";
+			if (Debaggu==1) {//勢力圏表示
+				HenD = "\n";
+				for(HenE=0;HenE<=AreaSousu;HenE++) {
+					if (AreaSeiryoku[SenntakuArea][HenE]>0) {
+						HenD += NationNam[HenE];
+						HenD += AreaSeiryoku[SenntakuArea][HenE];
+					}
+				}
+			document.For05.Memo00.defaultValue = AreaNam[SenntakuArea]+"は"+HenA+"と接続しています(占領率"+HenF+"％)"+HenD;
+			}
+		break;
+		case 1:
+			HenA = "";
+			HenC = 0;
+			for(HenB=0;HenB<=KokkaSousu;HenB++) {
+				if (NationFukashinn[AreaShi[SenntakuArea]][HenB]>0) {
+					if (HenC>0) { HenA += "、" }
+					HenA += NationNam[HenB]+"(あと"+NationFukashinn[AreaShi[SenntakuArea]][HenB]+"ターン)";
+					HenC++;
+				}
+			}
+			if (HenC>0) { HenA += "と不可侵条約を締結しています\n"; }
+			if (HenC==0) { HenA="いずれの国家とも不可侵条約を締結していません\n"; }
+			HenE = 0;
+			HenF = 0;
+			for(HenD=0;HenD<=KokkaSousu;HenD++) {
+				if (NationWar[AreaShi[SenntakuArea]][HenD][0]>0) {
+					if (HenF>0) { HenA += "、" }
+					HenA += NationNam[HenD];
+					HenF++;
+				}
+			}
+			if (HenF>0) { HenA += "と戦争中です"; }
+			if (HenF==0) { HenA="いずれの国家とも戦争状態にありません"; }
+			document.For05.Memo00.defaultValue = NationNam[AreaShi[SenntakuArea]]+"の我が国に対する評価は"+NationKan[AreaShi[SenntakuArea]][PlayNation]+"です\nかの国の好戦性は"+NationKou[AreaShi[SenntakuArea]]+"です\nかの国は"+HenA;
+		break;
+		case 2:
+			if (SenntakuArea<1000) {
+				if (NationSca[PlayNation]!=-1) { HenA = "我が国の海軍拠点は"+AreaNam[NationSca[PlayNation]]+"です"; }
+				if (NationSca[PlayNation]==-1) { HenA = "我が国は内陸国のため、海軍拠点は存在しません"; }
+				document.For05.Memo00.defaultValue = "軍事(維持)費は、戦力1あたり"+MiscArmIjihi+"×軍事力"+NationArm[PlayNation]+"＝"+Math.round(NationArm[PlayNation]*MiscArmIjihi*10)/10+"です\n"+HenA+"\n我が国の戦争疲労度は"+NationExh[PlayNation]+"％です";
+			}
+			if (SenntakuArea>=1000) {
+				HenB = "";
+				for(HenA=0;HenA<=KokkaSousu;HenA++) {
+					if (SeaAreaSeiryoku[SenntakuArea][HenA]>0) {
+						HenB += NationNam[HenA]+SeaAreaSeiryoku[SenntakuArea][HenA];
+					}
+				}
+				document.For05.Memo00.defaultValue = HenB;
+			}
+		break;
+		case 3:
+			HenB = (AreaEco[SenntakuArea]-AreaPop[SenntakuArea])*5;
+			if (HenB<0) { HenB=0; }
+			HenA = Math.round(AreaEco[SenntakuArea]/AreaPop[SenntakuArea]*MiscAreaKeizaikaihatu*(5-(AreaChi[SenntakuArea]/100*4))*(2-(PaceNum/100))*(200-KeikiNum)/100*(100/AreaInf[SenntakuArea])/NationTecEcoGrothCost[AreaSen[SenntakuArea]]+HenB);
+			document.For05.Memo00.defaultValue = AreaNam[SenntakuArea]+"の経済開発費用は"+HenA+"です（インフラ率"+AreaInf[SenntakuArea]+"％）\n\n原油価格は"+GennyuNum+"です";
+		break;
+		case 4:
+			if (NationNal[PlayNation]==MiscNannminnTousei) { HenA="有効化"; }
+			if (NationNal[PlayNation]==MiscNannminn) { HenA="無効化"; }
+			document.For05.Memo00.defaultValue = "我が国は"+IdeologyNam[NationIdo[PlayNation]]+"です\n我が国の腐敗率は"+NationHuh[PlayNation]+"％です\n難民統制は"+HenA+"されています\n教育費は、1POPあたり"+NationRes[PlayNation]+"×人口"+NationPon[PlayNation]+"＝総費用"+Math.round(NationPon[PlayNation]*NationRes[PlayNation]*10)/10+"です(研究効率は"+PlayerResEff+")";
+		break;
+		case 5:
+			document.For05.Memo00.defaultValue = "各種情報を参照します";
+		break;
+	}
+	For04Sel00()
+}
+
+<!--マップ表示-->
+
+function For04Sel00() {
+	HenA = document.For04.S00.selectedIndex;
+	for (HenB=1;HenB<=AreaSousu;HenB++) {
+		switch(HenA) {
+			case 0:
+				document.getElementById("Area_"+AreaNam[HenB]+"_png").src=NationHat[AreaSen[HenB]]+".png";
+			break;
+			case 1:
+				HenC = NationInd[AreaShi[HenB]];
+				if (HenC==-1) { HenC = AreaShi[HenB]; }
+				document.getElementById("Area_"+AreaNam[HenB]+"_png").src=NationHat[HenC]+".png";
+			break;
+			case 2:
+				document.getElementById("Area_"+AreaNam[HenB]+"_png").src=IdeologyMap[NationIdo[AreaShi[HenB]]]+".png";
+			break;
+			case 3:
+				HenD = 0;
+				for (HenC=1;HenC<=KokkaSousu;HenC++) {
+					if (AreaSeiryoku[HenB][HenC]>HenD) {
+						HenD = AreaSeiryoku[HenB][HenC];
+						HenE = HenC;
+					}
+				}
+				document.getElementById("Area_"+AreaNam[HenB]+"_png").src=NationHat[HenE]+".png";
+			break;
+			case 4:
+				document.getElementById("Area_"+AreaNam[HenB]+"_png").src=ReligionMap[AreaRel[HenB]]+".png";
+			break;
+			case 5:
+				document.getElementById("Area_"+AreaNam[HenB]+"_png").src=ThikeiMap[AreaThi[HenB]]+".png";
+			break;
+		}
+	}
+}
+
+<!--【メニュー】-->
+
+MenuNum = -1;
+
+function Com01() {
+	switch (MenuNum) {
+		case -1:
+			Kettei()
+		break;
+		case 0:
+			MenuNum = 1;
+			document.For02.B01.value="関係改善";
+			document.For02.B02.value="不可侵条約";
+			document.For02.B03.value="従属要求";
+			document.For02.B04.value="開戦工作";
+			document.For02.B05.value="宣戦布告";
+			document.For02.B06.value="　戻る　";
+			HyoujiKoshinn()
+		break;
+		case 1:
+			ComDip()
+		break;
+		case 2:
+			ComArm()
+		break;
+		case 3:
+			ComEco()
+		break;
+		case 4:
+		break;
+		case 5:
+		break;
+	}
+}
+
+function Com02() {
+	switch (MenuNum) {
+		case -1:
+		break;
+		case 0:
+			MenuNum = 2;
+			document.For02.B01.value="陸軍増強";
+			document.For02.B02.value="陸軍占領";
+			document.For02.B03.value="　　　　";
+			document.For02.B04.value="　　　　";
+			document.For02.B05.value="　　　　";
+			document.For02.B06.value="　戻る　";
+			HyoujiKoshinn()
+		break;
+		case 1:
+			ComFuk()
+		break;
+		case 2:
+			ComSen()
+		break;
+		case 3:
+			ComInf()
+		break;
+		case 4:
+			ComChi()
+		break;
+		case 5:
+		break;
+	}
+}
+
+function Com03() {
+	switch (MenuNum) {
+		case -1:
+		break;
+		case 0:
+			MenuNum = 3;
+			document.For02.B01.value="経済開発";
+			document.For02.B02.value="インフラ";
+			document.For02.B03.value="　　　　";
+			document.For02.B04.value="　　　　";
+			document.For02.B05.value="　　　　";
+			document.For02.B06.value="　戻る　";
+			HyoujiKoshinn()
+		break;
+		case 1:
+			ComJuz()
+		break;
+		case 2:
+		break;
+		case 3:
+		break;
+		case 4:
+			ComNat()
+		break;
+		case 5:
+		break;
+	}
+}
+
+function Com04() {
+	switch (MenuNum) {
+		case -1:
+		break;
+		case 0:
+			MenuNum = 4;
+			document.For02.B01.value="憲法改正";
+			document.For02.B02.value="治安作戦";
+			document.For02.B03.value="難民統制";
+			document.For02.B04.value="教育投資";
+			document.For02.B05.value="　　　　";
+			document.For02.B06.value="　戻る　";
+			HyoujiKoshinn()
+		break;
+		case 1:
+			ComKai()
+		break;
+		case 2:
+		break;
+		case 3:
+		break;
+		case 4:
+			ComEdu()
+		break;
+		case 5:
+		break;
+	}
+}
+
+function Com05() {
+	switch (MenuNum) {
+		case -1:
+		break;
+		case 0:
+			MenuNum = 5;
+			document.For02.B01.value="　外交　";
+			document.For02.B02.value="　軍事　";
+			document.For02.B03.value="　経済　";
+			document.For02.B04.value="　国内　";
+			document.For02.B05.value="　　　　";
+			document.For02.B06.value="　戻る　";
+			HyoujiKoshinn()
+		break;
+		case 1:
+			ComDec()
+		break;
+		case 2:
+		break;
+		case 3:
+			ComTec()
+		break;
+		case 4:
+		break;
+		case 5:
+		break;
+	}
+}
+
+function Com06() {
+	switch (MenuNum) {
+		case -1:
+		break;
+		case 0:
+			ComTur()
+		break;
+		default:
+			MenuNum = 0;
+			document.For02.B01.value="　外交　";
+			document.For02.B02.value="　軍事　";
+			document.For02.B03.value="　経済　";
+			document.For02.B04.value="　国内　";
+			document.For02.B05.value="　情報　";
+			document.For02.B06.value="手番終了";
+			HyoujiKoshinn()
+		break;
+	}
+}
+
+<!--【数値メニュー】-->
+
+Num = 1;
+
+function M25() { Num -= 25; Num = Math.round(Num); if (Num<0) { Num=0; } document.For06.Tex00.defaultValue = Num; }
+function M5() { Num -= 5; Num = Math.round(Num); if (Num<0) { Num=0; } document.For06.Tex00.defaultValue = Num; }
+function M1() { Num -= 1; Num = Math.round(Num); if (Num<0) { Num=0; } document.For06.Tex00.defaultValue = Num; }
+function P1() { Num += 1; Num = Math.round(Num); if (Num>100) { Num=100; } document.For06.Tex00.defaultValue = Num; }
+function P5() { Num += 5; Num = Math.round(Num); if (Num>100) { Num=100; } document.For06.Tex00.defaultValue = Num; }
+function P25() { Num += 25; Num = Math.round(Num); if (Num>100) { Num=100; } document.For06.Tex00.defaultValue = Num; }
+
+<!--【陸軍増設】-->
+
+ArmZousetu = 0;
+
+function ComArm() {
+	if (NationMon[PlayNation]<MiscArmZousetu) {
+		alert("陸軍増設には資金が"+MiscArmZousetu+"必要です");
+	}
+	if (NationMon[PlayNation]>=MiscArmZousetu) {
+		if (ArmZousetu>0) {
+			alert("陸軍増設は1ターンに1度しか行えません");
+		}
+		if (ArmZousetu==0) {
+			NationArm[PlayNation] += 0.5;
+			NationArm[PlayNation] = Math.round(NationArm[PlayNation]*100)/100;
+			NationMon[PlayNation] -= MiscArmZousetu;
+			NationMon[PlayNation] = Math.round(NationMon[PlayNation]*10)/10;
+			ArmZousetu = 1;
+			HyoujiKoshinn()
+		}
+	}
+}
+
+<!--【陸軍占領】-->
+
+GunnjiSakusenn = 0;
+
+function ComSen() {
+	if (GunnjiSakusenn>0) {
+		alert("軍事作戦は1ターンに1度しか行えません");
+	}
+	if (GunnjiSakusenn==0) {
+		if (NationWar[PlayNation][AreaSen[SenntakuArea]][0]==0) {
+			alert(NationNam[AreaSen[SenntakuArea]]+"とは戦争中ではありません");
+		}
+		if (NationWar[PlayNation][AreaSen[SenntakuArea]][0]>0) {
+			HenB = 0;
+			for (HenA=0;HenA<=AreaSousu;HenA++) {
+				if (AreaSen[HenA]==PlayNation && AreaSetuzokuData[HenA][SenntakuArea]==1) {
+					HenB = 1;
+				}
+			}
+			if (HenB==0) {
+				alert(AreaNam[SenntakuArea]+"へ侵攻できるルートが存在しません");
+			}
+			if (HenB==1) {
+				BattleArea=SenntakuArea;
+				BattleAttNation=PlayNation;
+				BattleDefNation=AreaSen[SenntakuArea];
+				Battle()
+				GunnjiSakusenn=1;
+				HyoujiKoshinn()
+			}
+		}
+	}
+}
+
+
+<!--【経済開発】-->
+
+function ComEco() {
+	HenB = (AreaEco[SenntakuArea]-AreaPop[SenntakuArea])*5;
+	if (HenB<0) { HenB=0; }
+	HenA = Math.round(AreaEco[SenntakuArea]/AreaPop[SenntakuArea]*MiscAreaKeizaikaihatu*(5-(AreaChi[SenntakuArea]/100*4))*(2-(PaceNum/100))*(200-KeikiNum)/100*(100/AreaInf[SenntakuArea])/NationTecEcoGrothCost[AreaSen[SenntakuArea]]+HenB);
+	if (NationMon[PlayNation]<HenA) {
+		alert("経済開発には資金が"+HenA+"必要です");
+	}
+	if (NationMon[PlayNation]>=HenA) {
+		NationMon[PlayNation]-=HenA;
+		NationMon[PlayNation] = Math.round(NationMon[PlayNation]*10)/10;
+		AreaEco[SenntakuArea]+=0.5;
+		AreaEco[SenntakuArea] = Math.round(AreaEco[SenntakuArea]*10)/10;
+		Keisann()
+		HyoujiKoshinn()
+	}
+}
+
+<!--【インフラ】-->
+
+function ComInf() {
+	if (NationMon[PlayNation]<MiscInf) {
+		alert("インフラ整備には資金が"+MiscInf+"必要です");
+	}
+	if (NationMon[PlayNation]>=MiscInf) {
+		if (AreaInf[SenntakuArea]==100) {
+			alert(AreaNam[SenntakuArea]+"は既にインフラ率が100％です");
+		}
+		if (AreaInf[SenntakuArea]<100) {
+			NationMon[PlayNation]-=MiscInf;
+			NationMon[PlayNation] = Math.round(NationMon[PlayNation]*10)/10;
+			AreaInf[SenntakuArea]+=10;
+			AreaInf[SenntakuArea] = Math.round(AreaInf[SenntakuArea]);
+			Keisann()
+			HyoujiKoshinn()
+		}
+	}
+}
+
+function ComTec() {
+}
+
+<!--【関係改善】-->
+
+function ComDip() {
+	if (NationPop[PlayNation]<10) {
+		alert("関係改善には政治力が10必要です");
+	}
+	if (NationPop[PlayNation]>=10) {
+		if (AreaShi[SenntakuArea]==PlayNation) {
+			alert("自国へ関係改善を行うことはできません");
+		}
+		if (AreaShi[SenntakuArea]!=PlayNation) {
+			NationPop[PlayNation]-=10;
+			NationPop[PlayNation] = Math.round(NationPop[PlayNation]*10)/10;
+			HenA = PaceNum-50;
+			if (HenA<0) { HenA=0; }
+			NationKan[AreaShi[SenntakuArea]][PlayNation] += 5+((NationArm[PlayNation]/NationArm[AreaShi[SenntakuArea]]*(150-PaceNum)/100)+(NationEco[PlayNation]/NationEco[AreaShi[SenntakuArea]]*(HenA)/100))*2;
+			NationKan[AreaShi[SenntakuArea]][PlayNation] = Math.round(NationKan[AreaShi[SenntakuArea]][PlayNation]*10)/10;
+			alert(NationNam[AreaShi[SenntakuArea]]+"からの評価が"+NationKan[AreaShi[SenntakuArea]][PlayNation]+"になりました");
+			Keisann()
+			HyoujiKoshinn()
+		}
+	}
+}
+
+<!--【不可侵条約】-->
+
+function ComFuk() {
+	if (NationPop[PlayNation]<20) {
+		alert("不可侵条約締結には政治力が20必要です");
+	}
+	if (NationPop[PlayNation]>=20) {
+		if (AreaShi[SenntakuArea]==PlayNation) {
+			alert("自国と不可侵条約を結ぶことはできません");
+		}
+		if (NationInd[AreaShi[SenntakuArea]]!=-1) {
+			alert("従属国と不可侵条約を結ぶことはできません");
+		}
+		if (AreaShi[SenntakuArea]!=PlayNation && NationInd[AreaShi[SenntakuArea]]==-1) {
+			if (NationFukashinn[PlayNation][AreaShi[SenntakuArea]]!=0) {
+				alert(NationNam[AreaShi[SenntakuArea]]+"とは既に不可侵条約を締結しています");
+			}
+			if (NationFukashinn[PlayNation][AreaShi[SenntakuArea]]==0) {
+				HenA=0;
+				NationPop[PlayNation]-=20;
+				NationPop[PlayNation] = Math.round(NationPop[PlayNation]*10)/10;
+				if (NationArm[PlayNation]/NationArm[[AreaShi[SenntakuArea]]]>0.5 && NationKyo[AreaShi[SenntakuArea]]>MiscAIWarKyoui && NationKan[AreaShi[SenntakuArea]][PlayNation]>-25) {
+					NationFukashinn[AreaShi[SenntakuArea]][PlayNation]=MiscFukaTurn;
+					NationFukashinn[PlayNation][AreaShi[SenntakuArea]]=MiscFukaTurn;
+					NationKan[AreaShi[SenntakuArea]][PlayNation] += 10;
+					NationKan[AreaShi[SenntakuArea]][PlayNation] = Math.round(NationKan[AreaShi[SenntakuArea]][PlayNation]*10)/10;
+					NationKan[PlayNation][AreaShi[SenntakuArea]] += 10;
+					NationKan[PlayNation][AreaShi[SenntakuArea]] = Math.round(NationKan[PlayNation][AreaShi[SenntakuArea]]*10)/10;
+					HenA=1;
+					alert(NationNam[AreaShi[SenntakuArea]]+"との不可侵条約締結に成功しました");
+				}
+				if (HenA==0) { alert(NationNam[AreaShi[SenntakuArea]]+"との不可侵条約締結に失敗しました"); }
+				Keisann()
+				HyoujiKoshinn()
+			}
+		}
+	}
+}
+
+<!--【従属要求】-->
+//従属要求を成功させるには、（１）【必須】対象国の4倍以上の軍（２）対象国との関係が良い（３）対象国と同宗教（４）【必須】対象国が軍事的脅威を感じている（５）平和度が低い
+
+function ComJuz() {
+	if (NationPop[PlayNation]<20) {
+		alert("従属要求には政治力が20必要です");
+	}
+	if (NationPop[PlayNation]>=20) {
+		if (AreaShi[SenntakuArea]==PlayNation) {
+			alert("自国へ従属要求を行うことはできません");
+		}
+		if (AreaShi[SenntakuArea]!=PlayNation) {
+			if (PaceNum>IdeologyJuz[NationIdo[PlayNation]]) {
+				alert("イデオロギーが"+IdeologyNam[NationIdo[PlayNation]]+"の場合、平和度が"+IdeologyJuz[NationIdo[PlayNation]]+"以下でないと従属要求は行えません");
+			}
+			if (PaceNum<=IdeologyJuz[NationIdo[PlayNation]]) {
+				NationPop[PlayNation]-=20;
+				NationPop[PlayNation] = Math.round(NationPop[PlayNation]*10)/10;
+				NationKou[PlayNation]+=5;
+				HenB = 0;
+				if (MinnzokuRel[NationMin[PlayNation]]==MinnzokuRel[NationMin[AreaShi[SenntakuArea]]]) { HenB=20; }
+				HenC = 0;
+				if (NationArm[PlayNation]/NationArm[AreaShi[SenntakuArea]]>4 && NationKyo[AreaShi[SenntakuArea]]>1 && NationArm[PlayNation]/NationArm[AreaShi[SenntakuArea]]/4*NationKan[AreaShi[SenntakuArea]][PlayNation]+(100-PaceNum)/2+HenB>100) {
+					NationInd[AreaShi[SenntakuArea]]=PlayNation;
+					NationKan[AreaShi[SenntakuArea]][PlayNation]+=25;
+					if (NationKan[PlayNation][AreaShi[SenntakuArea]]<50) { NationKan[PlayNation][AreaShi[SenntakuArea]]=50; }
+					NationKou[PlayNation]+=5;
+					alert(NationNam[AreaShi[SenntakuArea]]+"を従属させることに成功しました");
+					Keisann()
+					HenC = 1;
+				}
+				if (HenC==0) {
+					alert(NationNam[AreaShi[SenntakuArea]]+"は我が国の従属化の要求を拒否しました");
+					NationKan[AreaShi[SenntakuArea]][PlayNation]-=50;
+					NationKan[PlayNation][AreaShi[SenntakuArea]]-=25;
+				}
+				PaceNum-=3;
+				if (PaceNum<0) { PaceNum=0; }
+				PaceNum = Math.round(PaceNum*10)/10;
+				HyoujiKoshinn()
+			}
+		}
+	}
+}
+
+<!--【開戦工作】-->
+
+NationKai = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationKai[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		NationKai[HenA][HenB] = 999;
+	}
+}
+
+function ComKai() {
+	if (NationPop[PlayNation]<20) {
+		alert("開戦工作には政治力が20必要です");
+	}
+	if (NationPop[PlayNation]>=20) {
+		if (AreaShi[SenntakuArea]==PlayNation) {
+			alert("自国へ開戦工作を行うことはできません");
+		}
+		if (AreaShi[SenntakuArea]!=PlayNation) {
+			if (IdeologyKou[NationIdo[PlayNation]]<PaceNum) {
+				alert("イデオロギーが"+IdeologyNam[NationIdo[PlayNation]]+"の場合、平和度が"+IdeologyKou[NationIdo[PlayNation]]+"以下でないと開戦工作は行えません");
+			}
+			if (IdeologyKou[NationIdo[PlayNation]]>=PaceNum) {
+				if (NationKai[PlayNation][AreaShi[SenntakuArea]]<999) {
+					alert(NationNam[AreaShi[SenntakuArea]]+"へは既に開戦工作を実施済みです");
+				}
+				if (NationKai[PlayNation][AreaShi[SenntakuArea]]==999) {
+					NationPop[PlayNation]-=20;
+					NationPop[PlayNation] = Math.round(NationPop[PlayNation]*10)/10;
+					NationKai[PlayNation][AreaShi[SenntakuArea]] = 4;
+					NationKan[PlayNation][AreaShi[SenntakuArea]]-=25;
+					NationKan[PlayNation][AreaShi[SenntakuArea]] = Math.round(NationKan[PlayNation][AreaShi[SenntakuArea]]);
+					NationKan[AreaShi[SenntakuArea]][PlayNation]-=50;
+					NationKan[AreaShi[SenntakuArea]][PlayNation] = Math.round(NationKan[AreaShi[SenntakuArea]][PlayNation]);
+					NationKou[PlayNation]+=5;
+					alert(NationNam[AreaShi[SenntakuArea]]+"への開戦工作を実施しました\n4ターン後から宣戦布告が可能です");
+					HyoujiKoshinn()
+				}
+			}
+		}
+	}
+}
+
+<!--【宣戦布告】-->
+
+function ComDec() {
+	if (AreaShi[SenntakuArea]==PlayNation) {
+		alert("自国へ宣戦布告することはできません");
+	}
+	if (AreaShi[SenntakuArea]!=PlayNation) {
+		if (NationKai[PlayNation][AreaShi[SenntakuArea]]==999) {
+			alert("宣戦布告には開戦工作が必要です");
+		}
+		if (NationKai[PlayNation][AreaShi[SenntakuArea]]!=0 && NationKai[PlayNation][AreaShi[SenntakuArea]]<999) {
+			alert("開戦工作が完了するまで後"+NationKai[PlayNation][AreaShi[SenntakuArea]]+"か月必要です");
+		}
+		if (NationKai[PlayNation][AreaShi[SenntakuArea]]==0) {
+			if (window.confirm(NationNam[AreaShi[SenntakuArea]]+"に宣戦布告しますか？")) {
+				AttNation = PlayNation;
+				DefNation = AreaShi[SenntakuArea];
+				NationKou[PlayNation]+=10;
+				War()
+			}
+		}
+	}
+}
+
+<!--【治安作戦】-->
+
+function ComChi() {
+	if (NationPop[PlayNation]<10) {
+		alert("治安作戦には政治力が10必要です");
+	}
+	if (NationPop[PlayNation]>=10) {
+		if (AreaShi[SenntakuArea]!=PlayNation) {
+			alert("他国領土へ治安作戦を行うことはできません");
+		}
+		if (AreaShi[SenntakuArea]==PlayNation) {
+			NationPop[PlayNation]-=10;
+			NationPop[PlayNation] = Math.round(NationPop[PlayNation]*10)/10;
+			HenA = 0.5;
+			if (AreaRel[SenntakuArea]==MinnzokuRel[NationMin[PlayNation]]) { HenA = 1; }
+			if (AreaMin[SenntakuArea]==NationMin[PlayNation]) { HenA = 2; }
+			AreaChi[SenntakuArea] += 5*HenA+NationArm[PlayNation]-(AreaPop[SenntakuArea]/2);
+			if (AreaChi[SenntakuArea]>100) { AreaChi[SenntakuArea]=100; }
+			AreaChi[SenntakuArea] = Math.round(AreaChi[SenntakuArea]*10)/10;
+			alert(AreaNam[SenntakuArea]+"で治安作戦を実施しました\n"+AreaNam[SenntakuArea]+"の治安が"+AreaChi[SenntakuArea]+"になりました");
+			HyoujiKoshinn()
+		}
+	}
+}
+
+<!--【教育投資】-->
+
+function ComEdu() {
+	if (NationPop[PlayNation]<5) {
+		alert("政策変更には政治力が5必要です");
+	}
+	if (NationPop[PlayNation]>=5) {
+		NationPop[PlayNation]-=5;
+		NationPop[PlayNation] = Math.round(NationPop[PlayNation]*10)/10;
+		NationRes[PlayNation] = Math.round(Num)/100;
+		alert("教育費を"+NationRes[PlayNation]+"に変更しました（人口"+NationPon[PlayNation]+"×教育費"+NationRes[PlayNation]+"＝"+Math.round(NationPon[PlayNation]*NationRes[PlayNation]*10)/10+"）");
+		HyoujiKoshinn()
+	}
+}
+
+function ComNat() {
+	HenA=5;
+	if (NationIdo[PlayNation]==0 && NationNal[PlayNation]==MiscNannminn) { HenA=50; }
+	if (NationPop[PlayNation]<HenA) {
+		alert("政策変更には政治力が"+HenA+"必要です");
+	}
+	if (NationPop[PlayNation]>=HenA) {
+		NationPop[PlayNation]-=HenA;
+		NationPop[PlayNation] = Math.round(NationPop[PlayNation]*10)/10;
+		HenB = 0;
+		if (NationNal[PlayNation]==MiscNannminnTousei) {
+			NationNal[PlayNation]=MiscNannminn;
+			HenB = 1;
+			alert("難民統制を無効化しました");
+		}
+		if (NationNal[PlayNation]==MiscNannminn && HenB==0) {
+			NationNal[PlayNation]=MiscNannminnTousei;
+			alert("難民統制を有効化しました");
+		}
+		HyoujiKoshinn()
+	}
+}
+
+<!--【決定】-->
+
+function Kettei() {
+	if (Game==0) {
+		if (SenntakuArea>=1000) { alert("海域でプレイすることはできません"); }
+		if (SenntakuArea<1000) {
+			if (window.confirm(NationNam[AreaShi[SenntakuArea]]+"でプレイしますか？")) {
+				Game = 1;
+				PlayNation = AreaShi[SenntakuArea];
+				document.getElementById("選択国家").src=NationHat[PlayNation]+".png";
+				for (SyokiHenA=0;SyokiHenA<=KokkaSousu;SyokiHenA++) {
+					NationPop[SyokiHenA] = MiscSyokiPop;
+				}
+				PlayerResEff = NationRes[PlayNation];
+				MenuNum = 0;
+				document.For05.Memo00.defaultValue = "コマンドを選択してください";
+				document.For02.B01.value="　外交　";
+				document.For02.B02.value="　軍事　";
+				document.For02.B03.value="　経済　";
+				document.For02.B04.value="　国内　";
+				document.For02.B05.value="　情報　";
+				document.For02.B06.value="手番終了";
+				TurnKoshinn()
+			}
+		}
+	}
+}
+
+<!--【ターン更新】-->
+
+var KoshinnNum = 0;
+var PlayNationKoshinn = 0;
+
+function ComTur() {
+	if (Game==1) {
+		TurnKoshinn()
+	}
+}
+
+function TurnKoshinn() {
+	<!--各国手番-->
+	while (PlayNationKoshinn==0) {
+		KoshinnNum++;
+ 		if (KoshinnNum>KokkaSousu) {
+ 			KoshinnNum=0;
+ 			TurnNum++;
+ 			if (TurnNum%10==1) {
+ 				<!--10ターン経過処理-->
+ 				PaceNumKoushinn()
+ 				KousennseiKoushinn()
+ 			}
+ 			RandomEvent()
+ 			KeikiHenndou()
+ 			GennyuKakaku()
+ 			Nannminn()
+ 			Kokkyoumasatu()
+ 			ChiannKaihuku()
+ 			WarExhKaihuku()
+ 			KaisennKousakuKousinn()
+ 			FukasinnKoushinn()
+ 			SekaikennKeisann()
+ 			Seiryokukenn()
+ 		}
+		if (KoshinnNum!=PlayNation) {
+			AINum = KoshinnNum;
+			AI()
+		}
+		if (KoshinnNum==PlayNation) {
+			PlayNationKoshinn = 1;
+		}
+	}
+	<!--プレイヤー国家用処理-->
+	Keisann()
+	PlayNationKoshinn = 0;
+	NationMon[PlayNation] += NationEco[PlayNation];
+	NationMon[PlayNation] -= NationArm[PlayNation]*MiscArmIjihi;
+	NationMon[PlayNation] -= NationPon[PlayNation]*NationRes[PlayNation];
+	NationMon[PlayNation] = Math.round(NationMon[PlayNation]*10)/10;
+	NationPop[PlayNation] += NationPoi[PlayNation];
+	if (NationPop[PlayNation]>NationPoi[PlayNation]*MiscPoliticsPowerBitiku) { NationPop[PlayNation]=NationPoi[PlayNation]*MiscPoliticsPowerBitiku; }
+	TecNation = PlayNation;
+	TecProgress()
+	ArmZousetu = 0;
+	GunnjiSakusenn = 0;
+	HyoujiKoshinn()
+}
+
+<!--景気-->
+
+ZennkiKeizaiKibo = 0;
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	ZennkiKeizaiKibo += AreaEco[HenA]*AreaChi[HenA]/100;
+}
+
+function KeikiHenndou() {
+	KonnkiKeizaiKibo = 0;
+	KeikiNum += (100-KeikiNum)/4;
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		KonnkiKeizaiKibo += AreaEco[HenA]*AreaChi[HenA]/100;
+	}
+	KeikiNum *= KonnkiKeizaiKibo/ZennkiKeizaiKibo;
+	KeikiNum += (PaceNum-100)/5;
+	if (KeikiNum<50) { KeikiNum=50; }
+	if (KeikiNum>150) { KeikiNum=150; }
+	KeikiNum = Math.round(KeikiNum);
+	ZennkiKeizaiKibo = KonnkiKeizaiKibo;
+}
+
+<!--難民-->
+
+ChiannKari = new Array();
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	ChiannKari[HenA]=0;
+}
+
+function Nannminn() {
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		ChiannKari[HenA] = AreaChi[HenA];
+		for (HenB=0;HenB<=AreaSousu;HenB++) {
+			if (AreaSetuzokuData[HenA][HenB]==1) {
+				if (AreaChi[HenA]>AreaChi[HenB]) {
+					ChiannKari[HenA] = AreaChi[HenA]-(AreaChi[HenA]-AreaChi[HenB])/NationNal[AreaShi[HenA]];
+					ChiannKari[HenA] = Math.round(ChiannKari[HenA]*10)/10;
+				}
+			}
+		}
+	}
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		AreaChi[HenA]=ChiannKari[HenA];
+	}
+}
+
+<!--平和度回復-->
+
+function PaceNumKoushinn() {
+	if (PaceNum<100) { PaceNum++; }
+	if (PaceNum>100) { PaceNum=100; }
+}
+
+<!--国境摩擦-->
+
+NationKanKokkyou = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationKanKokkyou[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		NationKanKokkyou[HenA][HenB] = 0;
+	}
+}
+
+function Kokkyoumasatu() {
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		for (HenB=0;HenB<=AreaSousu;HenB++) {
+			if (AreaSetuzokuData[HenA][HenB]==1 && AreaShi[HenA]!=AreaShi[HenB]) {
+				if (NationKanKokkyou[AreaShi[HenA]][AreaShi[HenB]]>-25) {
+					if (NationInd[AreaShi[HenA]]!=AreaShi[HenB] && NationInd[AreaShi[HenB]]!=AreaShi[HenA]) {//宗主国と従属国の間では国境摩擦は発生しない
+						if (NationMin[AreaShi[HenA]]!=NationMin[AreaShi[HenB]]) {//同民族同士では国境摩擦は発生しない
+							if (NationFukashinn[AreaShi[HenA]][AreaShi[HenB]]==0) {//不可侵締結国家同士では国境摩擦は発生しない
+								NationKanKokkyou[AreaShi[HenA]][AreaShi[HenB]] -= 0.2;//約10年で国境摩擦最大値に
+								NationKanKokkyou[AreaShi[HenA]][AreaShi[HenB]] = Math.round(NationKanKokkyou[AreaShi[HenA]][AreaShi[HenB]]*10)/10;
+								NationKan[AreaShi[HenA]][AreaShi[HenB]] -= 0.2;
+								NationKan[AreaShi[HenA]][AreaShi[HenB]] = Math.round(NationKan[AreaShi[HenA]][AreaShi[HenB]]*10)/10;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+<!--治安回復-->
+
+function ChiannKaihuku() {
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		if (AreaChi[HenA]!=100) {
+			if (AreaRel[HenA]==MinnzokuRel[NationMin[AreaShi[HenA]]]) {//同宗教で+2
+				AreaChi[HenA] += 2;
+			}
+			if (AreaRel[HenA]!=MinnzokuRel[NationMin[AreaShi[HenA]]]) {//異宗教で+1
+				AreaChi[HenA] += 1;
+			}
+			if (AreaMin[HenA]==NationMin[AreaShi[HenA]]) {//同民族で+1(重複あり)
+				AreaChi[HenA] += 1;
+			}
+			if (AreaChi[HenA]>100) { AreaChi[HenA]=100; }
+			AreaChi[HenA] = Math.round(AreaChi[HenA]*10)/10;
+		}
+	}
+}
+
+<!--戦争疲労回復-->
+
+function WarExhKaihuku() {
+	for (HenA=0;HenA<=KokkaSousu;HenA++) {
+		if (NationExh[HenA]>0) {
+			HenC=0;
+			for (HenB=0;HenB<=KokkaSousu;HenB++) {
+				if (NationWar[HenA][HenB][0]>0) {
+					HenC=1;
+				}
+			}
+			if (HenC==0) {
+				NationExh[HenA]-= MiscWarExhKaihukuAtwar;
+			}
+			if (HenC==1) {
+				NationExh[HenA]-= MiscWarExhKaihuku;
+			}
+			NationExh[HenA] = Math.round(NationExh[HenA]);
+			if (NationExh[HenA]<0) { NationExh[HenA]=0; }
+		}
+	}
+}
+
+<!--好戦性低下-->
+
+NationKou = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	NationKou[HenA] = 0;
+}
+
+function KousennseiKoushinn() {
+	for (HenA=0;HenA<=KokkaSousu;HenA++) {
+		if (NationKou[HenA]>0) {
+			NationKou[HenA]--;
+		}
+	}
+}
+
+//初期設定　好戦性
+NationKou[33] = 0;//中国
+
+<!--開戦工作更新-->
+
+function KaisennKousakuKousinn() {
+	for (HenA=0;HenA<=KokkaSousu;HenA++) {
+		for (HenB=0;HenB<=KokkaSousu;HenB++) {
+			if (NationKai[HenA][HenB]<999 && NationKai[HenA][HenB]!=0) {
+				NationKai[HenA][HenB]--;
+			}
+		}
+	}
+}
+
+<!--不可侵経過-->
+
+function FukasinnKoushinn() {
+	for (HenA=0;HenA<=KokkaSousu;HenA++) {
+		for (HenB=0;HenB<=KokkaSousu;HenB++) {
+			if (NationFukashinn[HenA][HenB]>0) {
+				if (HenA==PlayNation) {
+					if (NationFukashinn[HenA][HenB]==1) {
+						alert(NationNam[HenB]+"との不可侵条約が失効しました");
+					}
+				}
+				NationFukashinn[HenA][HenB]--;
+			}
+		}
+	}
+}
+
+AIInfOboe = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	AIInfOboe[HenA] = 0;
+}
+
+<!--【AI】-->
+
+JuzokuTarget = new Array();
+for(HenA=0;HenA<=KokkaSousu;HenA++) {
+	JuzokuTarget[HenA]=0;
+}
+
+function AI() {
+	<!--資金計算-->
+	NationMon[AINum] += NationEco[AINum];
+	NationMon[AINum] -= NationArm[AINum]*MiscArmIjihi;
+	NationMon[AINum] -= NationPon[AINum]*NationRes[AINum];
+	<!--政治力計算-->
+	NationPop[AINum]+=NationPoi[AINum];
+	if (NationPop[AINum]>NationPoi[AINum]*MiscPoliticsPowerBitiku) { NationPop[AINum]=NationPoi[AINum]*MiscPoliticsPowerBitiku; }
+	<!--研究-->
+	TecNation = AINum;
+	TecProgress()
+	if (NationEco[AINum]*0.3<NationPon[AINum]*NationRes[AINum]) {
+		NationRes[AINum] = Math.round(NationEco[AINum]*0.15/NationPon[AINum]*100)/100;
+	}
+	if (NationEco[AINum]*0.1>NationPon[AINum]*NationRes[AINum]) {
+		NationRes[AINum] = Math.round(NationEco[AINum]*0.15/NationPon[AINum]*100)/100;
+	}
+	<!--（国内）-->
+	<!--治安作戦（削除）-->
+	<!--（外交）-->
+	HenKyoui = AINum;
+	KyouiKeisann()
+	AIDipAction = 0;
+	<!--対外脅威が低い-->
+	if (NationKyo[AINum]<MiscAIWarKyoui) {
+		<!--宣戦布告-->
+		for (HenA=0;HenA<=KokkaSousu;HenA++) {
+			if (NationKai[AINum][HenA]==0) {
+				if (NationExh[AINum]==0) {
+					if (MiscDecArm*MiscBattelDefBon<=NationArm[AINum]/NationArm[HenA]*Math.random()) {
+						for (HenB=0;HenB<=AreaSousu;HenB++) {
+							if (AreaShi[HenB]==AINum) {
+								for (HenC=0;HenC<=AreaSousu;HenC++) {
+									if (AreaShi[HenC]==HenA) {
+										if (AreaSetuzokuData[HenB][HenC]==1) {
+											if (NationFukashinn[AINum][AreaShi[HenB]]==0) {
+												HenE=0;//他国と戦争中でない
+												for (HenD=0;HenD<=KokkaSousu;HenD++) {
+													if (NationWar[AINum][HenD][0]>0) {
+														HenE=1;
+													}
+												}
+												if (HenE==0) {
+													if (AIDipAction==0) {
+														if (Math.random()>=0.5) {
+															AttNation = AINum;
+															DefNation = HenA;
+															NationKou[AINum]+=10;
+															War()
+															AIDipAction = 1;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		<!--開戦工作-->
+		if (NationPop[AINum]>=20) {
+			for (HenA=0;HenA<=AreaSousu;HenA++) {
+				if (AreaShi[HenA]==AINum) {
+					for (HenB=0;HenB<=AreaSousu;HenB++) {
+						if (AreaSetuzokuData[HenA][HenB]==1) {
+							if (MiscDecArm*MiscBattelDefBon<=NationArm[AINum]/NationArm[AreaShi[HenB]]) {
+								if (NationInd[AreaShi[HenB]]==-1) {
+									if (NationFukashinn[AINum][AreaShi[HenB]]==0) {
+										if (NationKai[AINum][AreaShi[HenB]]==999) {
+											HenD=0;//他国と戦争中でない
+											for (HenC=0;HenC<=KokkaSousu;HenC++) {
+												if (NationWar[AINum][HenC][0]>0) {
+													HenD=1;
+												}
+											}
+											if (HenD==0) {
+												if (AIDipAction==0) {
+													if (Math.random()>=0.75) {
+														NationPop[AINum]-=20;
+														NationKai[AINum][AreaShi[HenB]] = 4;
+														NationKan[AINum][AreaShi[HenB]]-=25;
+														NationKan[AreaShi[HenB]][AINum]-=50;
+														NationKou[AINum]+=5;
+														alert(NationNam[AINum]+"が"+NationNam[AreaShi[HenB]]+"へ開戦工作を行っています");
+														AIDipAction = 1;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	<!--対外脅威が高い-->
+	if (AIDipAction==0) {
+		if (NationKyo[AINum]>MiscAIWarKyoui) {
+			if (NationInd[AINum]==-1) {
+				<!--不可侵条約締結-->
+				if (NationPop[AINum]>=20) {
+					HenC = 0; HenD = 999;
+					for (HenA=0;HenA<=AreaSousu;HenA++) {
+						if (AreaShi[HenA]==AINum) {
+							for (HenB=0;HenB<=AreaSousu;HenB++) {
+								if (AreaSetuzokuData[HenA][HenB]==1) {
+									if (AINum!=AreaShi[HenB] && NationArm[AreaShi[HenB]]/NationArm[AINum]>0.3 && NationFukashinn[AINum][AreaShi[HenB]]==0 && NationInd[AreaShi[HenB]]==-1 && NationWar[AINum][AreaShi[HenB]][0]==0) {
+										if (NationArm[AINum]/NationArm[[AreaShi[HenB]]]>0.5 && NationKyo[AreaShi[HenB]]>MiscAIWarKyoui && NationKan[AreaShi[HenB]][AINum]>-25) {
+											HenF = NationArm[AreaShi[HenB]]/NationArm[AINum]*(100+NationKan[AreaShi[HenB]][AINum]);
+											if (HenF>HenC) { HenC = HenF; HenD = AreaShi[HenB]; }
+										}
+									}
+								}
+							}
+						}
+					}
+					if (HenD!=999) {
+						NationFukashinn[HenD][AINum]=MiscFukaTurn;
+						NationFukashinn[AINum][HenD]=MiscFukaTurn;
+						NationKan[HenD][AINum]+=10;
+						NationKan[HenD][AINum] = Math.round(NationKan[HenD][AINum]*10)/10;
+						NationKan[AINum][HenD]+=10;
+						NationKan[AINum][HenD] = Math.round(NationKan[AINum][HenD]*10)/10;
+						alert(NationNam[AINum]+"は"+NationNam[HenD]+"と不可侵条約を締結しました");
+						KyouiKeisann()
+						AIDipAction=1;
+					}
+				}
+			}
+		}
+	}
+	<!--（財政）-->
+	<!--軍増設-->
+	if (NationEco[AINum]>=NationArm[AINum]*MiscArmIjihi*2) {
+		while (NationMon[AINum]>=MiscArmZousetu) {
+			NationArm[AINum] += 0.5;
+			NationArm[AINum] = Math.round(NationArm[AINum]*100)/100;
+			NationMon[AINum] -= MiscArmZousetu;
+		}
+	}
+	<!--経済開発-->//軍増設は、軍の維持費と経済収入により上限があり、上限を満たすと軍増設が行われなくなる＝資金が余りはじめ、経済開発が行われるように
+	AIKeizaikaihatu =  new Array();
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		AIKeizaikaihatu[HenA] = 9999;
+		if (AreaShi[HenA]==AINum && AreaSen[HenA]==AINum) {
+			HenB = (AreaEco[HenA]-AreaPop[HenA])*5;
+			if (HenB<0) { HenB=0; }
+			AIKeizaikaihatu[HenA] = Math.round(AreaEco[HenA]/AreaPop[HenA]*MiscAreaKeizaikaihatu*(5-(AreaChi[HenA]/100*4))*(2-(PaceNum/100))*(200-KeikiNum)/100*(100/AreaInf[HenA])/NationTecEcoGrothCost[AreaSen[HenA]]+HenB);
+		}
+	}
+	HenC = 9999;
+	HenD = 0;
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		if (HenC>AIKeizaikaihatu[HenA]) {
+			HenC=AIKeizaikaihatu[HenA];
+			HenD=HenA;
+		}
+	}
+	if (HenC!=9999) {
+		//インフラ建設
+		if (AIInfOboe[AINum]==0) {
+			if (NationMon[AINum]<HenC) {
+				if (NationMon[AINum]>=MiscInf) {
+					if (AreaInf[HenD]<MiscAIInfLim) {
+						NationMon[AINum]-=MiscInf;
+						NationMon[AINum] = Math.round(NationMon[AINum]*10)/10;
+						AreaInf[HenD]+=10;
+						AreaInf[HenD] = Math.round(AreaInf[HenD]);
+						AIInfOboe[AINum] = 1;//AIは最低でも、インフラ開発と経済開発を交互に行う
+					}
+				}
+			}
+		}
+		//経済開発
+		if (NationMon[AINum]>=HenC) {
+			NationMon[AINum]-=HenC;
+			NationMon[AINum] = Math.round(NationMon[AINum]*10)/10;
+			AreaEco[HenD]+=0.5;
+			AreaEco[HenD] = Math.round(AreaEco[HenD]*10)/10;
+			AIInfOboe[AINum] = 0;
+		}
+	}
+	<!--（軍事）-->
+	HenE = 0; HenF = 999; HenG=0;
+	for (HenA=0;HenA<=KokkaSousu;HenA++) {
+		if (NationWar[AINum][HenA][0]>0) {//自国と戦争している国家が存在するか
+			if (NationArm[HenA]/NationArm[AINum]<0.8) {//相手国の軍隊が自国の80％未満ならば攻撃を実行する
+				for (HenB=0;HenB<=AreaSousu;HenB++) {
+					if (AreaSen[HenB]==HenA) {//目標となる相手国占領エリア
+						for (HenC=0;HenC<=AreaSousu;HenC++) {
+							if (AreaSen[HenC]==AINum && AreaSetuzokuData[HenB][HenC]==1) {//出撃拠点となる自国占領エリア
+								if (HenE<AreaEco[HenB]) {//攻撃可能エリアのうち、最も経済力の高い地域を選定する
+									HenE=AreaEco[HenB];
+									HenF=HenB;
+									HenG=1;
+								}
+							}
+						}
+					}
+				}
+			}
+			if (NationArm[HenA]/NationArm[AINum]>=0.8) {//(自国が複数国家と戦争している場合)自国軍の80％を上回る軍を保有する国家が存在する場合、攻撃作戦は中止となる
+				HenG=0;
+			}
+		}
+	}
+	if (HenG==1) {
+		BattleArea=HenF;
+		BattleAttNation=AINum;
+		BattleDefNation=AreaSen[HenF];
+		Battle()
+	}
+}
+
+<!--【AI脅威計算】-->
+
+function KyouiKeisann() {
+	NationKyo[HenKyoui] = 0;
+	KyouiKeisannKokka = new Array();//2か所以上で隣接している国家の脅威を二重に計算するのを防止するため
+	for (HenKyouiA=0;HenKyouiA<=KokkaSousu;HenKyouiA++) {
+		KyouiKeisannKokka[HenKyouiA] = new Array();
+	}
+	for (HenKyouiA=0;HenKyouiA<=AreaSousu;HenKyouiA++) {
+		if (HenKyoui==AreaShi[HenKyouiA]) {
+			for (HenKyouiB=0;HenKyouiB<=AreaSousu;HenKyouiB++) {
+				if (AreaSetuzokuData[HenKyouiA][HenKyouiB]==1 && AreaShi[HenKyouiA]!=AreaShi[HenKyouiB]) {
+					if (KyouiKeisannKokka[AreaShi[HenKyouiB]]==0) {
+						if (NationFukashinn[HenKyoui][AreaShi[HenKyouiB]]<MiscFukasinnKyoJogai) {//不可侵条約を締結している国は除外
+							if (NationInd[HenKyoui]!=AreaShi[HenKyouiB] && AreaShi[HenKyouiB]!=NationInd[HenKyoui]) {//宗主国と属国は対象外
+								if (AIKannsoku>=10) { alert(NationNam[HenKyoui]+"が"+NationNam[AreaShi[HenKyouiB]]+"の軍事的脅威を計算"); }
+								NationKyo[HenKyoui] += (NationArm[AreaShi[HenKyouiB]]/NationArm[HenKyoui])**2;
+								KyouiKeisannKokka[AreaShi[HenKyouiB]] = 1;
+									<!--【属国に対しては宗主国の軍も脅威度に加算】-->
+									if (KyouiKeisannKokka[NationInd[AreaShi[HenKyouiB]]]==0) {
+										if (NationInd[AreaShi[HenKyouiB]]!=-1) {
+											NationKyo[HenKyoui] += (NationArm[NationInd[AreaShi[HenKyouiB]]]/NationArm[HenKyoui])**2;
+											KyouiKeisannKokka[NationInd[AreaShi[HenKyouiB]]] = 1;
+										}
+									}
+								NationKyo[HenKyoui] = Math.round(NationKyo[HenKyoui]*10)/10;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+<!--【AI勢力圏計算】-->
+
+AreaSeiryoku = new Array();
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	AreaSeiryoku[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		AreaSeiryoku[HenA][HenB] = 0;
+	}
+}
+
+AreaSeiryokuKari = new Array();
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	AreaSeiryokuKari[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		AreaSeiryokuKari[HenA][HenB] = 0;
+	}
+}
+
+function Seiryokukenn() {
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		AreaSeiryoku[HenA] = new Array();
+		for (HenB=0;HenB<=KokkaSousu;HenB++) {
+			AreaSeiryoku[HenA][HenB] = 0;
+		}
+	}
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		AreaSeiryokuKari[HenA] = new Array();
+		for (HenB=0;HenB<=KokkaSousu;HenB++) {
+			AreaSeiryokuKari[HenA][HenB] = 0;
+		}
+	}
+	AreaJiShi = new Array();
+	for (HenSeiryokuA=0;HenSeiryokuA<=AreaSousu;HenSeiryokuA++) {
+		AreaJiShi[HenSeiryokuA]=AreaShi[HenSeiryokuA];
+		if (NationInd[AreaShi[HenSeiryokuA]]!=-1) { AreaJiShi[HenSeiryokuA]=NationInd[AreaShi[HenSeiryokuA]]; }
+	}
+	//支配国の軍隊を計算
+	for (HenSeiryokuA=0;HenSeiryokuA<=AreaSousu;HenSeiryokuA++) {
+		AreaSeiryoku[HenSeiryokuA][AreaJiShi[HenSeiryokuA]] = NationArm[AreaJiShi[HenSeiryokuA]]*(100-NationExh[AreaJiShi[HenSeiryokuA]])/100;
+	}
+	//隣接エリアの軍隊を計算
+	for (HenSeiryokuA=0;HenSeiryokuA<=AreaSousu;HenSeiryokuA++) {
+		for (HenSeiryokuB=0;HenSeiryokuB<=AreaSousu;HenSeiryokuB++) {
+			if (AreaSetuzokuData[HenSeiryokuA][HenSeiryokuB]==1) {
+				if (AreaJiShi[HenSeiryokuA]!=AreaJiShi[HenSeiryokuB]) {
+					AreaSeiryoku[HenSeiryokuA][AreaJiShi[HenSeiryokuB]] = NationArm[AreaJiShi[HenSeiryokuB]]*(100-NationExh[AreaJiShi[HenSeiryokuA]])/100/2*ThikeiSei[AreaThi[HenSeiryokuA]];
+				}
+			}
+		}
+	}
+	//隣接エリアの軍隊を計算(2度目)
+	for (HenSeiryokuA=0;HenSeiryokuA<=AreaSousu;HenSeiryokuA++) {
+		for (HenSeiryokuB=0;HenSeiryokuB<=AreaSousu;HenSeiryokuB++) {
+			if (AreaSetuzokuData[HenSeiryokuA][HenSeiryokuB]==1) {
+				for (HenSeiryokuC=0;HenSeiryokuC<=KokkaSousu;HenSeiryokuC++) {
+					if (AreaSeiryoku[HenSeiryokuB][HenSeiryokuC]>0) {
+						if (AreaSeiryoku[HenSeiryokuA][HenSeiryokuC]==0) {
+							AreaSeiryokuKari[HenSeiryokuA][HenSeiryokuC] = AreaSeiryoku[HenSeiryokuB][HenSeiryokuC]*(100-NationExh[HenSeiryokuC])/100/2*ThikeiSei[AreaThi[HenSeiryokuA]];
+						}
+					}
+				}
+			}
+		}
+	}
+	for (HenSeiryokuA=0;HenSeiryokuA<=AreaSousu;HenSeiryokuA++) {
+		for (HenSeiryokuB=0;HenSeiryokuB<=KokkaSousu;HenSeiryokuB++) {
+			AreaSeiryoku[HenSeiryokuA][HenSeiryokuB] += AreaSeiryokuKari[HenSeiryokuA][HenSeiryokuB];
+		}
+	}
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		AreaSeiryokuKari[HenA] = new Array();
+		for (HenB=0;HenB<=KokkaSousu;HenB++) {
+			AreaSeiryokuKari[HenA][HenB] = 0;
+		}
+	}
+	//隣接エリアの軍隊を計算(3度目)
+	for (HenSeiryokuA=0;HenSeiryokuA<=AreaSousu;HenSeiryokuA++) {
+		for (HenSeiryokuB=0;HenSeiryokuB<=AreaSousu;HenSeiryokuB++) {
+			if (AreaSetuzokuData[HenSeiryokuA][HenSeiryokuB]==1) {
+				for (HenSeiryokuC=0;HenSeiryokuC<=KokkaSousu;HenSeiryokuC++) {
+					if (AreaSeiryoku[HenSeiryokuB][HenSeiryokuC]>0) {
+						if (AreaSeiryoku[HenSeiryokuA][HenSeiryokuC]==0) {
+							AreaSeiryokuKari[HenSeiryokuA][HenSeiryokuC] = AreaSeiryoku[HenSeiryokuB][HenSeiryokuC]*(100-NationExh[HenSeiryokuC])/100/2*ThikeiSei[AreaThi[HenSeiryokuA]];
+						}
+					}
+				}
+			}
+		}
+	}
+	for (HenSeiryokuA=0;HenSeiryokuA<=AreaSousu;HenSeiryokuA++) {
+		for (HenSeiryokuB=0;HenSeiryokuB<=KokkaSousu;HenSeiryokuB++) {
+			AreaSeiryoku[HenSeiryokuA][HenSeiryokuB] += AreaSeiryokuKari[HenSeiryokuA][HenSeiryokuB];
+		}
+		HenSeiryokuC = 0;
+		for (HenSeiryokuB=0;HenSeiryokuB<=KokkaSousu;HenSeiryokuB++) {
+			HenSeiryokuC += AreaSeiryoku[HenSeiryokuA][HenSeiryokuB];
+		}
+		HenSeiryokuC /= 10;
+		for (HenSeiryokuB=0;HenSeiryokuB<=KokkaSousu;HenSeiryokuB++) {
+			AreaSeiryoku[HenSeiryokuA][HenSeiryokuB] /= HenSeiryokuC;
+			AreaSeiryoku[HenSeiryokuA][HenSeiryokuB] = Math.round(AreaSeiryoku[HenSeiryokuA][HenSeiryokuB]*10)/10;
+		}
+	}
+}
+
+<!--【AI警戒度】-->
+
+AreaSeiryoku = new Array();
+for (HenA=0;HenA<=AreaSousu;HenA++) {
+	AreaSeiryoku[HenA] = new Array();
+	for (HenB=0;HenB<=KokkaSousu;HenB++) {
+		AreaSeiryoku[HenA][HenB] = 0;
+	}
+}
+
+Seiryokukenn()
+
+<!--【制海権計算】-->
+
+SeaAreaSeiryoku = new Array();
+
+function SekaikennKeisann() {
+	for (SeikaiHenA=0;SeikaiHenA<=SeaAreaSousu;SeikaiHenA++) {
+		SeaAreaSeiryoku[SeikaiHenA] = new Array();
+		for (SeikaiHenB=0;SeikaiHenB<=KokkaSousu;SeikaiHenB++) {
+			SeaAreaSeiryoku[SeikaiHenA][SeikaiHenB] = 0;
+		}
+	}
+	for (SeikaiHenA=0;SeikaiHenA<=KokkaSousu;SeikaiHenA++) {
+		if (NationSca[SeikaiHenA]!=-1) {
+			for (SeikaiHenB=0;SeikaiHenB<=SeaAreaSousu;SeikaiHenB++) {
+				if (AreaSetuzokuData[NationSca[SeikaiHenA]][SeikaiHenB]==1) {
+					SeaAreaSeiryoku[SeikaiHenB][SeikaiHenA] = NationArm[SeikaiHenA];
+				}
+			}
+		}
+	}
+}
+
+SekaikennKeisann()
+
+<!--【宣戦布告】-->
+
+function War() {
+	alert(NationNam[AttNation]+"が"+NationNam[DefNation]+"へ宣戦布告");
+	NationWar[AttNation][DefNation][0] = 1;
+	NationWar[DefNation][AttNation][0] = 1;
+}
+
+<!--【戦闘】-->
+
+function Battle() {
+	HenBattleA=0;
+	if (BattleDefNation!=PlayNation) {//防御側AIが決戦を挑むか
+		if ((NationArm[BattleAttNation]/NationArm[BattleDefNation]<MiscDefKessennRate || NationCap[BattleDefNation]==BattleArea) && NationArm[BattleDefNation]>=0.3) {
+			Attack()
+			HenBattleA=1;
+		}
+	}
+	if (BattleDefNation==PlayNation) {//防御側プレイヤーが決戦を挑むか
+		if (window.confirm(NationNam[AINum]+"が"+AreaNam[BattleArea]+"に攻撃してきました\n決戦を挑みますか？")) {
+			Attack()
+			HenBattleA=1;
+		}
+	}
+	if (HenBattleA==0) {//決戦を挑まなかった場合
+		Sennryou()
+	}
+	<!--全土占領判定-->
+	HenBattleC = 1;
+	if (AreaSen[NationCap[BattleDefNation]]!=BattleDefNation) {
+		HenBattleC = 0;
+		for (HenBattleB=0;HenBattleB<=AreaSousu;HenBattleB++) {
+			if (AreaSen[HenBattleB]==BattleDefNation) {
+				HenBattleC = 1;
+			}
+		}
+	}
+	if (HenBattleC==0) {
+		<!--講和交渉（併合のみ）-->
+		for (HenBattleD=0;HenBattleD<=AreaSousu;HenBattleD++) {
+			if (AreaShi[HenBattleD]==BattleDefNation) {
+				AreaShi[HenBattleD]=AreaSen[HenBattleD];
+				document.getElementById("Area_"+AreaNam[HenBattleD]+"_png").src=NationHat[AreaShi[HenBattleD]]+".png";
+				AreaChi[HenBattleD]-=0;//旧仕様-20
+				if (AreaChi[HenBattleD]<0) { AreaChi[HenBattleD]=0; }
+				AreaChi[HenBattleD] = Math.round(AreaChi[HenBattleD]*10)/10;
+			}
+		}
+		for (HenBattleD=0;HenBattleD<=KokkaSousu;HenBattleD++) {
+			if (NationInd[HenBattleD]==BattleDefNation) {
+				NationInd[HenBattleD] = -1;
+			}
+		}
+		NationWar[BattleAttNation][BattleDefNation][0] = 0;
+		NationWar[BattleDefNation][BattleAttNation][0] = 0;
+		for (HenBattleE=0;HenBattleE<=KokkaSousu;HenBattleE++) {
+			if (NationWar[BattleDefNation][HenBattleE][0]>0) {
+				NationWar[BattleDefNation][HenBattleE][0]=0;
+			}
+		}
+		alert(NationNam[BattleAttNation]+"は"+NationNam[BattleDefNation]+"を併合しました\n国際社会はこのような暴挙を許さないでしょう……");
+		document.For04.S00.selectedIndex=0;
+		For04Sel00()
+		Keisann()
+	}
+}
+
+function Attack() {
+	<!--戦闘-->
+	HenWarA = NationArm[BattleAttNation]*MiscBattel*((Math.random()+Math.random()+Math.random()+Math.random()+2)/4)*ThikeiAtt[AreaThi[BattleArea]]*NationTecArmyAttEff[BattleAttNation]*(200-NationExh[BattleAttNation])/200;
+	HenWarB = NationArm[BattleDefNation]*MiscBattel*((Math.random()+Math.random()+Math.random()+Math.random()+2)/4)*ThikeiDef[AreaThi[BattleArea]]*NationTecArmyAttEff[BattleDefNation]*(200-NationExh[BattleDefNation])/200*MiscBattelDefBon;
+	HenWarC = NationArm[BattleAttNation]-HenWarB; HenWarC = Math.round(HenWarC*100)/100; if (HenWarC<0) { HenWarC=0; HenWarB=NationArm[BattleAttNation]; }
+	HenWarD = NationArm[BattleDefNation]-HenWarA; HenWarD = Math.round(HenWarD*100)/100; if (HenWarD<0) { HenWarD=0; HenWarA=NationArm[BattleDefNation]; }
+	alert(AreaNam[BattleArea]+"攻防戦\n攻撃側："+NationNam[BattleAttNation]+"軍　"+NationArm[BattleAttNation]+"→"+HenWarC+"\n防御側："+NationNam[BattleDefNation]+"軍　"+NationArm[BattleDefNation]+"→"+HenWarD);
+		<!--平和度低下-->
+		PaceNum -= Math.round(HenWarA+HenWarB)*MiscPaceNumBattel;
+		if (PaceNum<0) { PaceNum = 0; }
+		<!--戦闘による治安低下-->
+		AreaChi[BattleArea] -= (HenWarA+HenWarB)*MiscBattleChi;
+		if (AreaChi[BattleArea]<0) { AreaChi[BattleArea]=0; }
+		AreaChi[BattleArea] = Math.round(AreaChi[BattleArea]*10)/10;
+		<!--戦争疲労度増加-->
+		NationExh[BattleAttNation] += (HenWarB/(NationArm[BattleAttNation]+0.01)*MiscWarExhAtt)+2;
+		NationExh[BattleAttNation] = Math.round(NationExh[BattleAttNation]);
+		if (NationExh[BattleAttNation]>100) { NationExh[BattleAttNation]=100; }
+		NationExh[BattleDefNation] += (HenWarA/(NationEco[BattleDefNation]+0.01)*MiscWarExhDef);
+		NationExh[BattleDefNation] = Math.round(NationExh[BattleDefNation]);
+		if (NationExh[BattleDefNation]>100) { NationExh[BattleDefNation]=100; }
+		alert("戦争疲労度\n"+NationNam[BattleAttNation]+"："+NationExh[BattleAttNation]+"\n"+NationNam[BattleDefNation]+"："+NationExh[BattleDefNation]);
+	NationArm[BattleAttNation] = HenWarC;
+	NationArm[BattleDefNation] = HenWarD;
+	<!--占領進行-->
+	if (NationArm[BattleAttNation]>NationArm[BattleDefNation]*2) {
+		HenWarE = AreaSer[BattleArea];
+		HenWarF = ((((NationArm[BattleAttNation]-NationArm[BattleDefNation]*2)*4)/AreaPop[BattleArea])+10)*ThikeiSen[AreaThi[BattleArea]];
+		HenWarF = Math.round(HenWarF);
+		if (HenWarF>34) { HenWarF=34; }
+		AreaSer[BattleArea] += HenWarF;
+		AreaSer[BattleArea] = Math.round(AreaSer[BattleArea]);
+		if (AreaSer[BattleArea]>100) { AreaSer[BattleArea]=100; }
+		alert(AreaNam[BattleArea]+"を"+NationNam[BattleAttNation]+"軍が占領中(占領率："+HenWarE+"％→"+AreaSer[BattleArea]+"％)");
+		if (AreaSer[BattleArea]>=100) {
+			AreaSer[BattleArea]=0;
+			AreaSen[BattleArea]=BattleAttNation;
+			alert(AreaNam[BattleArea]+"を"+NationNam[BattleAttNation]+"軍が占領");
+			document.getElementById("Area_"+AreaNam[BattleArea]+"_png").src=NationHat[BattleAttNation]+".png";
+		}
+		<!--占領による治安低下-->
+		AreaChi[BattleArea] -= HenWarF/3;
+		if (AreaChi[BattleArea]<0) { AreaChi[BattleArea]=0; }
+		AreaChi[BattleArea] = Math.round(AreaChi[BattleArea]*10)/10;
+	}
+	Keisann()
+}
+
+function Sennryou() {
+	HenWarA = AreaSer[BattleArea];
+	HenWarB = ((NationArm[BattleAttNation]*4/AreaPop[BattleArea])+20)*ThikeiSen[AreaThi[BattleArea]];
+	HenWarB = Math.round(HenWarB);
+	if (HenWarB>34) { HenWarB=34; }
+	AreaSer[BattleArea] += HenWarB;
+	AreaSer[BattleArea] = Math.round(AreaSer[BattleArea]);
+	if (AreaSer[BattleArea]>100) { AreaSer[BattleArea]=100; }
+	alert(AreaNam[BattleArea]+"を"+NationNam[BattleAttNation]+"軍が占領中(占領率："+HenWarA+"％→"+AreaSer[BattleArea]+"％)");
+	NationExh[BattleAttNation] += 2;
+	NationExh[BattleDefNation] = Math.round(NationExh[BattleDefNation]);
+	if (NationExh[BattleDefNation]>100) { NationExh[BattleDefNation]=100; }
+	if (AreaSer[BattleArea]>=100) {
+		AreaSer[BattleArea]=0;
+		AreaSen[BattleArea]=BattleAttNation;
+		alert(AreaNam[BattleArea]+"を"+NationNam[BattleAttNation]+"軍が占領");
+	}
+	<!--占領による治安低下-->
+	AreaChi[BattleArea] -= HenWarB/3;
+	if (AreaChi[BattleArea]<0) { AreaChi[BattleArea]=0; }
+	AreaChi[BattleArea] = Math.round(AreaChi[BattleArea]*10)/10;
+	Keisann()
+}
+
+<!--【AI関係改善】-->
+
+function AIComDip() {
+	if (NationPop[AINum]>=10) {
+		NationPop[AINum]-=10;
+		NationPop[AINum] = Math.round(NationPop[AINum]*10)/10;
+		HenAIComDipB = PaceNum-50;
+		if (HenAIComDipB<0) { HenAIComDipB=0; }
+		NationKan[HenAIComDipA][AINum] += 5+((NationArm[AINum]/NationArm[HenAIComDipA]*(150-PaceNum)/100)+(NationEco[AINum]/NationEco[HenAIComDipA]*(HenAIComDipB)/100))*2;
+		NationKan[HenAIComDipA][AINum] = Math.round(NationKan[HenAIComDipA][AINum]*10)/10;
+	}
+}
+
+<!--【技術研究】-->
+
+var TecSousu = 3;
+
+Technology = new Array();//０技術名、１研究コスト、２上昇量
+Technology[0] = new Array("未指定",1,0);
+Technology[1] = new Array("経済成長効率",500,0.20);//経済開発コスト減少
+Technology[2] = new Array("経済効率",500,0.02);//経済効率上昇
+Technology[3] = new Array("陸軍攻撃効率",500,0.03);//陸軍攻撃効率上昇
+
+TecNam = new Array();
+TecCos = new Array();
+TecKou = new Array();
+for (HenA=0;HenA<=TecSousu;HenA++) {
+	TecNam[HenA] = Technology[HenA][0];
+	TecCos[HenA] = Technology[HenA][1];
+	TecKou[HenA] = Technology[HenA][2];
+}
+
+TecPro = new Array();
+for (HenA=0;HenA<=KokkaSousu;HenA++) {
+	TecPro[HenA] = new Array(0,0);//０選択中の技術、１進捗度
+}
+
+function AITecTarget() {
+	TecPro[TecNation][0] = 3;
+	if (TecNation==PlayNation) { alert("研究技術が未指定のため、自動的に"+TecNam[3]+"が選択されました"); }
+}
+
+function TecProgress() {
+	if (TecPro[TecNation][0]==0) {
+		AITecTarget()
+	}
+	if (TecNation!=PlayNation) { TecPro[TecNation][1] += NationRes[TecNation]*100; }
+	if (TecNation==PlayNation) {
+		if (PlayerResEff>NationRes[TecNation]) { PlayerResEff=NationRes[TecNation]; }
+		TecPro[TecNation][1] += PlayerResEff*100;
+		if (NationRes[TecNation]>PlayerResEff) {
+			TecHenA = (NationRes[TecNation]-PlayerResEff)/MiscPlayerTecResEff;
+			if (HenA<0.01) { TecHenA = 0.01; }
+			PlayerResEff+=TecHenA;
+			PlayerResEff=Math.round(PlayerResEff*100)/100;
+		}
+	}
+	if (TecPro[TecNation][1]>=Technology[TecPro[TecNation][0]][1]) {
+		TecResFinish()
+	}
+}
+
+function TecResFinish() {
+	switch (TecPro[TecNation][0]) {
+		case 1:
+			NationTecEcoGrothCost[TecNation] += Technology[1][2];
+			NationTecEcoGrothCost[TecNation] = Math.round(NationTecEcoGrothCost[TecNation]*100)/100;
+		break;
+		case 2:
+			NationTecEconomyEff[TecNation] += Technology[2][2];
+			NationTecEconomyEff[TecNation] = Math.round(NationTecEconomyEff[TecNation]*100)/100;
+		break;
+		case 3:
+			NationTecArmyAttEff[TecNation] += Technology[3][2];
+			NationTecArmyAttEff[TecNation] = Math.round(NationTecArmyAttEff[TecNation]*100)/100;
+		break;
+	}
+	if (TecNation==PlayNation) { alert(TecNam[TecPro[TecNation][0]]+"の技術研究が完了しました"); }
+	TecPro[TecNation][1] = 0;
+}
+
+function For07Sel00() {
+	if (AreaShi[SenntakuArea]!=PlayNation) { alert("他国の研究技術は変更できません"); }
+	if (AreaShi[SenntakuArea]==PlayNation) {
+		TecHenA = document.For07.S00.selectedIndex;
+		TecPro[PlayNation][0] = TecHenA;
+		TecPro[PlayNation][1] = 0;
+		document.For07.Tex00.defaultValue = TecPro[AreaShi[SenntakuArea]][1]+"/"+TecCos[TecPro[AreaShi[SenntakuArea]][0]];
+	}
+}
+
+<!--【ランダムイベント】-->
+
+function RandomEvent() {
+	for (HenA=0;HenA<=AreaSousu;HenA++) {
+		if (AreaRel[HenA]==2 && MinnzokuRel[NationMin[AreaShi[HenA]]]!=2 && HenA!=48 && HenA!=60 && HenA!=61 && HenA!=62) {
+			if (Math.random()<=0.01) {
+				HenB = Math.random();
+				if (HenB<=0.50) {
+					AreaChi[HenA]-=10;
+					if (AreaChi[HenA]<0) { AreaChi[HenA]=0; }
+					AreaChi[HenA] = Math.round(AreaChi[HenA]*10)/10;
+					alert(AreaNam[HenA]+"で「ランダムイベント：イスラム教徒による爆弾テロ」が発生しました\n"+AreaNam[HenA]+"の治安が10低下（現在"+AreaChi[HenA]+"）");
+				}
+				if (HenB>0.50) {
+					NationArm[AreaShi[HenA]]-=0.2;
+					if (NationArm[AreaShi[HenA]]<0) { NationArm[AreaShi[HenA]]=0; }
+					NationArm[AreaShi[HenA]] = Math.round(NationArm[AreaShi[HenA]]*10)/10;
+					alert(AreaNam[HenA]+"で「ランダムイベント：イスラム教徒による爆弾テロ」が発生しました\n"+NationNam[AreaShi[HenA]]+"の軍に0.2の被害（現在"+NationArm[AreaShi[HenA]]+"）");
+				}
+			}
+		}
+	}
+}
+
+</script>
+
+<img class=fl src="map.png" style="position:absolute; top:0px;left:0px;" width="1145" height="480">
+
+<img id="Area_ロンドン_png" src="ENG.png" style="position:absolute; top:90px;left:85px;" width=22 height=14 onClick="Area(1);" ondblclick="Area(1);Kettei();">
+<img id="Area_パリ_png" src="FRA.png" style="position:absolute; top:120px;left:102px;" width=22 height=14 onClick="Area(2);" ondblclick="Area(2);Kettei();">
+<img id="Area_マドリッド_png" src="SPA.png" style="position:absolute; top:150px;left:80px;" width=22 height=14 onClick="Area(3);" ondblclick="Area(3);Kettei();">
+<img id="Area_ベルリン_png" src="GER.png" style="position:absolute; top:95px;left:125px;" width=22 height=14 onClick="Area(4);" ondblclick="Area(4);Kettei();">
+<img id="Area_ローマ_png" src="ITA.png" style="position:absolute; top:140px;left:135px;" width=22 height=14 onClick="Area(5);" ondblclick="Area(5);Kettei();">
+<img id="Area_ウィーン_png" src="AUS.png" style="position:absolute; top:115px;left:135px;" width=22 height=14 onClick="Area(6);" ondblclick="Area(6);Kettei();">
+<img id="Area_ストックホルム_png" src="SWE.png" style="position:absolute; top:50px;left:140px;" width=22 height=14 onClick="Area(7);" ondblclick="Area(7);Kettei();">
+<img id="Area_ワルシャワ_png" src="POL.png" style="position:absolute; top:90px;left:155px;" width=22 height=14 onClick="Area(8);" ondblclick="Area(8);Kettei();">
+<img id="Area_キエフ_png" src="UKR.png" style="position:absolute; top:110px;left:195px;" width=22 height=14 onClick="Area(9);" ondblclick="Area(9);Kettei();">
+<img id="Area_ブダペスト_png" src="HUN.png" style="position:absolute; top:115px;left:165px;" width=22 height=14 onClick="Area(10);" ondblclick="Area(10);Kettei();">
+<img id="Area_ブカレスト_png" src="ROM.png" style="position:absolute; top:135px;left:175px;" width=22 height=14 onClick="Area(11);" ondblclick="Area(11);Kettei();">
+<img id="Area_アンカラ_png" src="TUR.png" style="position:absolute; top:152px;left:200px;" width=22 height=14 onClick="Area(12);" ondblclick="Area(12);Kettei();">
+<img id="Area_ミンスク_png" src="BLR.png" style="position:absolute; top:90px;left:185px;" width=22 height=14 onClick="Area(13);" ondblclick="Area(13);Kettei();">
+<img id="Area_リガ_png" src="LAT.png" style="position:absolute; top:65px;left:170px;" width=22 height=14 onClick="Area(14);" ondblclick="Area(14);Kettei();">
+<img id="Area_ヘルシンキ_png" src="FIN.png" style="position:absolute; top:40px;left:165px;" width=22 height=14 onClick="Area(15);" ondblclick="Area(15);Kettei();">
+<img id="Area_ペテルブルク_png" src="RUS.png" style="position:absolute; top:45px;left:190px;" width=22 height=14 onClick="Area(16);" ondblclick="Area(16);Kettei();">
+<img id="Area_モスクワ_png" src="RUS.png" style="position:absolute; top:70px;left:205px;" width=22 height=14 onClick="Area(17);" ondblclick="Area(17);Kettei();">
+<img id="Area_バグー_png" src="AZE.png" style="position:absolute; top:150px;left:240px;" width=22 height=14 onClick="Area(18);" ondblclick="Area(18);Kettei();">
+<img id="Area_コーカサス_png" src="RUS.png" style="position:absolute; top:125px;left:230px;" width=22 height=14 onClick="Area(19);" ondblclick="Area(19);Kettei();">
+<img id="Area_ヴォルコグラード_png" src="RUS.png" style="position:absolute; top:100px;left:225px;" width=22 height=14 onClick="Area(20);" ondblclick="Area(20);Kettei();">
+
+<img id="Area_ラバト_png" src="MOR.png" style="position:absolute; top:180px;left:72px;" width=22 height=14 onClick="Area(21);" ondblclick="Area(21);Kettei();">
+<img id="Area_アルジェ_png" src="ALG.png" style="position:absolute; top:167px;left:106px;" width=22 height=14 onClick="Area(22);" ondblclick="Area(22);Kettei();">
+<img id="Area_トリポリ_png" src="LBY.png" style="position:absolute; top:185px;left:140px;" width=22 height=14 onClick="Area(23);" ondblclick="Area(23);Kettei();">
+<img id="Area_カイロ_png" src="EGY.png" style="position:absolute; top:193px;left:180px;" width=22 height=14 onClick="Area(24);" ondblclick="Area(24);Kettei();">
+<img id="Area_エルサレム_png" src="ISR.png" style="position:absolute; top:175px;left:205px;" width=22 height=14 onClick="Area(25);" ondblclick="Area(25);Kettei();">
+<img id="Area_バグダッド_png" src="IRQ.png" style="position:absolute; top:175px;left:235px;" width=22 height=14 onClick="Area(26);" ondblclick="Area(26);Kettei();">
+<img id="Area_リヤド_png" src="SAU.png" style="position:absolute; top:205px;left:235px;" width=22 height=14 onClick="Area(27);" ondblclick="Area(27);Kettei();">
+<img id="Area_テヘラン_png" src="PER.png" style="position:absolute; top:180px;left:265px;" width=22 height=14 onClick="Area(28);" ondblclick="Area(28);Kettei();">
+<img id="Area_カブール_png" src="AFG.png" style="position:absolute; top:175px;left:290px;" width=22 height=14 onClick="Area(29);" ondblclick="Area(29);Kettei();">
+<img id="Area_イスラマバード_png" src="PAK.png" style="position:absolute; top:180px;left:315px;" width=22 height=14 onClick="Area(30);" ondblclick="Area(30);Kettei();">
+<img id="Area_カラチ_png" src="PAK.png" style="position:absolute; top:200px;left:300px;" width=22 height=14 onClick="Area(31);" ondblclick="Area(31);Kettei();">
+
+<img id="Area_ムンバイ_png" src="IND.png" style="position:absolute; top:220px;left:320px;" width=22 height=14 onClick="Area(32);" ondblclick="Area(32);Kettei();">
+<img id="Area_デリー_png" src="IND.png" style="position:absolute; top:200px;left:340px;" width=22 height=14 onClick="Area(33);" ondblclick="Area(33);Kettei();">
+<img id="Area_コルカタ_png" src="IND.png" style="position:absolute; top:215px;left:375px;" width=22 height=14 onClick="Area(34);" ondblclick="Area(34);Kettei();">
+<img id="Area_チェンナイ_png" src="IND.png" style="position:absolute; top:240px;left:350px;" width=22 height=14 onClick="Area(35);" ondblclick="Area(35);Kettei();">
+<img id="Area_ヤンゴン_png" src="BUR.png" style="position:absolute; top:230px;left:400px;" width=22 height=14 onClick="Area(36);" ondblclick="Area(36);Kettei();">
+<img id="Area_バンコク_png" src="SIA.png" style="position:absolute; top:250px;left:420px;" width=22 height=14 onClick="Area(37);" ondblclick="Area(37);Kettei();">
+<img id="Area_ハノイ_png" src="VIE.png" style="position:absolute; top:230px;left:435px;" width=22 height=14 onClick="Area(38);" ondblclick="Area(38);Kettei();">
+<img id="Area_シンガポール_png" src="U75.png" style="position:absolute; top:280px;left:420px;" width=22 height=14 onClick="Area(39);" ondblclick="Area(39);Kettei();">
+
+<img id="Area_広州_png" src="CHC.png" style="position:absolute; top:210px;left:455px;" width=22 height=14 onClick="Area(40);" ondblclick="Area(40);Kettei();">
+<img id="Area_上海_png" src="CHC.png" style="position:absolute; top:185px;left:475px;" width=22 height=14 onClick="Area(41);" ondblclick="Area(41);Kettei();">
+<img id="Area_北京_png" src="CHC.png" style="position:absolute; top:155px;left:460px;" width=22 height=14 onClick="Area(42);" ondblclick="Area(42);Kettei();">
+<img id="Area_重慶_png" src="CHC.png" style="position:absolute; top:190px;left:430px;" width=22 height=14 onClick="Area(43);" ondblclick="Area(43);Kettei();">
+<img id="Area_蘭州_png" src="CHC.png" style="position:absolute; top:160px;left:425px;" width=22 height=14 onClick="Area(44);" ondblclick="Area(44);Kettei();">
+<img id="Area_瀋陽_png" src="CHC.png" style="position:absolute; top:135px;left:485px;" width=22 height=14 onClick="Area(45);" ondblclick="Area(45);Kettei();">
+<img id="Area_ウランバトール_png" src="MON.png" style="position:absolute; top:125px;left:440px;" width=22 height=14 onClick="Area(46);" ondblclick="Area(46);Kettei();">
+<img id="Area_敦煌_png" src="CHC.png" style="position:absolute; top:145px;left:390px;" width=22 height=14 onClick="Area(47);" ondblclick="Area(47);Kettei();">
+<img id="Area_ウルムチ_png" src="CHC.png" style="position:absolute; top:130px;left:365px;" width=22 height=14 onClick="Area(48);" ondblclick="Area(48);Kettei();">
+<img id="Area_昆明_png" src="CHC.png" style="position:absolute; top:210px;left:415px;" width=22 height=14 onClick="Area(49);" ondblclick="Area(49);Kettei();">
+<img id="Area_チベット_png" src="CHC.png" style="position:absolute; top:185px;left:375px;" width=22 height=14 onClick="Area(50);" ondblclick="Area(50);Kettei();">
+<img id="Area_ソウル_png" src="KOR.png" style="position:absolute; top:160px;left:495px;" width=22 height=14 onClick="Area(51);" ondblclick="Area(51);Kettei();">
+
+<img id="Area_イルクーツク_png" src="RUS.png" style="position:absolute; top:85px;left:420px;" width=22 height=14 onClick="Area(52);" ondblclick="Area(52);Kettei();">
+<img id="Area_ウラジオストック_png" src="RUS.png" style="position:absolute; top:130px;left:515px;" width=22 height=14 onClick="Area(53);" ondblclick="Area(53);Kettei();">
+<img id="Area_チタ_png" src="RUS.png" style="position:absolute; top:95px;left:460px;" width=22 height=14 onClick="Area(54);" ondblclick="Area(54);Kettei();">
+<img id="Area_ノボシビルスク_png" src="RUS.png" style="position:absolute; top:80px;left:370px;" width=22 height=14 onClick="Area(55);" ondblclick="Area(55);Kettei();">
+<img id="Area_オムスク_png" src="RUS.png" style="position:absolute; top:80px;left:330px;" width=22 height=14 onClick="Area(56);" ondblclick="Area(56);Kettei();">
+<img id="Area_チェリャビンスク_png" src="RUS.png" style="position:absolute; top:80px;left:290px;" width=22 height=14 onClick="Area(57);" ondblclick="Area(57);Kettei();">
+<img id="Area_カザニ_png" src="RUS.png" style="position:absolute; top:75px;left:250px;" width=22 height=14 onClick="Area(58);" ondblclick="Area(58);Kettei();">
+<img id="Area_アルハンゲリスク_png" src="RUS.png" style="position:absolute; top:15px;left:220px;" width=22 height=14 onClick="Area(59);" ondblclick="Area(59);Kettei();">
+<img id="Area_アスタナ_png" src="KAZ.png" style="position:absolute; top:110px;left:320px;" width=22 height=14 onClick="Area(60);" ondblclick="Area(60);Kettei();">
+<img id="Area_タシュケント_png" src="UZB.png" style="position:absolute; top:140px;left:325px;" width=22 height=14 onClick="Area(61);" ondblclick="Area(61);Kettei();">
+<img id="Area_アシガバード_png" src="TRK.png" style="position:absolute; top:155px;left:290px;" width=22 height=14 onClick="Area(62);" ondblclick="Area(62);Kettei();">
+
+<img id="Area_東京_png" src="JAP.png" style="position:absolute; top:165px;left:535px;" width=22 height=14 onClick="Area(63);" ondblclick="Area(63);Kettei();">
+
+<img id="SeaArea_北海_png" src="Umi.png" style="position:absolute; top:70px;left:100px;" width=22 height=14 onClick="SeaArea(1001);" ondblclick="SeaArea(1001);Kettei();">
+<img id="SeaArea_大西洋東部_png" src="Umi.png" style="position:absolute; top:130px;left:30px;" width=22 height=14 onClick="SeaArea(1002);" ondblclick="SeaArea(1002);Kettei();">
+<img id="SeaArea_地中海_png" src="Umi.png" style="position:absolute; top:165px;left:145px;" width=22 height=14 onClick="SeaArea(1003);" ondblclick="SeaArea(1003);Kettei();">
+<img id="SeaArea_黒海_png" src="Umi.png" style="position:absolute; top:130px;left:200px;" width=22 height=14 onClick="SeaArea(1004);" ondblclick="SeaArea(1004);Kettei();">
+<img id="SeaArea_紅海_png" src="Umi.png" style="position:absolute; top:220px;left:210px;" width=22 height=14 onClick="SeaArea(1005);" ondblclick="SeaArea(1005);Kettei();">
+<img id="SeaArea_インド洋西部_png" src="Umi.png" style="position:absolute; top:250px;left:290px;" width=22 height=14 onClick="SeaArea(1006);" ondblclick="SeaArea(1006);Kettei();">
+<img id="SeaArea_インド洋東部_png" src="Umi.png" style="position:absolute; top:250px;left:380px;" width=22 height=14 onClick="SeaArea(1007);" ondblclick="SeaArea(1007);Kettei();">
+<img id="SeaArea_南シナ海_png" src="Umi.png" style="position:absolute; top:250px;left:455px;" width=22 height=14 onClick="SeaArea(1008);" ondblclick="SeaArea(1008);Kettei();">
+<img id="SeaArea_東シナ海_png" src="Umi.png" style="position:absolute; top:210px;left:520px;" width=22 height=14 onClick="SeaArea(1009);" ondblclick="SeaArea(1009);Kettei();">
+<img id="SeaArea_日本海_png" src="Umi.png" style="position:absolute; top:150px;left:520px;" width=22 height=14 onClick="SeaArea(1010);" ondblclick="SeaArea(1010);Kettei();">
+<img id="SeaArea_バレンツ海_png" src="Umi.png" style="position:absolute; top:10px;left:100px;" width=22 height=14 onClick="SeaArea(1011);" ondblclick="SeaArea(1011);Kettei();">
+<img id="SeaArea_バルト海_png" src="Umi.png" style="position:absolute; top:70px;left:145px;" width=22 height=14 onClick="SeaArea(1012);" ondblclick="SeaArea(1012);Kettei();">
+<img id="SeaArea_ペルシャ湾_png" src="Umi.png" style="position:absolute; top:200px;left:265px;" width=22 height=14 onClick="SeaArea(1013);" ondblclick="SeaArea(1013);Kettei();">
+
+<table border=1 style="position:absolute; top:445px;left:10px;border-collapse:collapse;">
+<tr><td><form name="For00">第<input name="Tex00" type="text" size="1" value="1">ターン</td><td>　景気<input name="Tex01" type="text" size="1" value="100％"></td><td>　平和度<input name="Tex02" type="text" size="1" value="100"></td></tr></form></table>
+
+<img id="選択国家" src="ENG.png" style="position:absolute; top:497px;left:20px;" width=22 height=14>
+
+<table border=1 style="position:absolute; top:490px;left:60px;border-collapse:collapse;">
+<tr><td><form name="For01">資金<input name="Tex00" type="text" size="3" value="0"></td><td>政治力<input name="Tex01" type="text" size="1" value="0"></td></tr></form></table>
+
+<table border=1 style="position:absolute; top:490px;left:250px;border-collapse:collapse;"><form name="For02"><tr><td><input type="button" value="　決定　" name="B01" onclick="Com01()"></td><td><input type="button" value="　　　　" name="B02" onclick="Com02()"></td><td><input type="button" value="　　　　" name="B03" onclick="Com03()"></td><td><input type="button" value="　　　　" name="B04" onclick="Com04()"></td><td><input type="button" value="　　　　" name="B05" onclick="Com05()"></td><td><input type="button" value="　　　　" name="B06" onclick="Com06()"></td></tr></form></table>
+
+<table border=1 style="position:absolute; top:530px;left:10px;border-collapse:collapse;"><tr><td><form name="For03">国家<input name="Tex00" type="text" size="8" value="イギリス"></td><td>軍事力<input name="Tex01" type="text" size="1" value="3"></td><td>総収入<input name="Tex02" type="text" size="1" value="0"></td><td>総人口<input name="Tex03" type="text" size="1" value="0"></td><td>関係性<input name="Tex04" type="text" size="1" value="0"></td></tr>
+<tr><td>地域<input name="Tex10" type="text" size="8" value="ロンドン"></td><td>経済　<input name="Tex11" type="text" size=1" value="6"></td><td>人口　<input name="Tex12" type="text" size=1" value="6"></td><td>石油　<input name="Tex13" type="text" size=1" value="10"></td><td>治安　<input name="Tex14" type="text" size=1" value="100"></td></tr></form></table>
+
+<table border=1 style="position:absolute; top:445px;left:380px;border-collapse:collapse;"><tr><td><form name="For04"><select name="S00" onChange="For04Sel00()">
+	<optgroup label="外交">
+		<option value="0">国家
+		<option value="1">従属
+		<option value="2">体制
+		<option value="3">勢力圏
+	</optgroup>
+	<optgroup label="地域">
+		<option value="10">宗教
+		<option value="11">地形
+	</optgroup>
+</select></form></td></tr></table>
+
+<table border=1 style="position:absolute; top:530px;left:550px;border-collapse:collapse;"><tr><td><form name="For05"><textarea name="Memo00" cols=60 rows=5>プレイ国家を選んでください</textarea></td></tr></form></table>
+
+<table border=0 style="position:absolute; top:491px;left:700px;border-collapse:collapse;"><tr><td><form name="For06"><input type="button" value="-25" onclick="M25()"><input type="button" value="-5" onclick="M5()"><input type="button" value="-1" onclick="M1()"><input name="Tex00" type="text" size="1" value="1"><input type="button" value="+1" onclick="P1()"><input type="button" value="+5" onclick="P5()"><input type="button" value="+25" onclick="P25()"></td></tr></form></table>
+
+<table border=0 style="position:absolute; top:650px;left:10px;border-collapse:collapse;"><tr><td>【技術】</td></tr></table>
+
+<table border=0 style="position:absolute; top:680px;left:10px;border-collapse:collapse;"><form name="For07"><tr><td>研究中技術　<select name="S00" onChange="For07Sel00()">
+	<option value="0">未指定
+	<option value="1">経済成長効率
+	<option value="2">経済効率
+	<option value="3">陸軍攻撃効率
+</select>　　</td><td>研究進捗　<input name="Tex00" type="text" size="6" value="0/1"></td></tr></form></table>
+
+<table border=0 style="position:absolute; top:710px;left:10px;border-collapse:collapse;"><form name="For08"><tr><td>経済成長効率　<input name="Tex00" type="text" size="1" value="1">　　</td><td>経済効率　<input name="Tex01" type="text" size="1" value="1">　　</td><td>陸軍攻撃効率　<input name="Tex02" type="text" size="1" value="1">　　</td></tr></form></table>
+
+</body>
+</html>
